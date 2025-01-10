@@ -1,6 +1,5 @@
-# gweb
+# G-WEB_Fraud_Detection
 
-# gweb
 
 This repository contains the project work carried out by group 97 as the final project of the MLOps course taught at DTU ([course website](https://skaftenicki.github.io/dtu_mlops/)). Group 97 consists of: Emilie Wenner, Anton Grier, Johanne Birk and Alberte Estad (see contributors list for individual github pages). 
 
