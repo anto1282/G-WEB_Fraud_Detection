@@ -4,9 +4,13 @@ from model import GCN
 from data import AMLtoGraph
 import torch_geometric.transforms as T
 import typer
+import wandb
 
-def test(model_path: str, batchsize: int = 256, hdn_chnls: int = 16, atn_heads: int = 4,drop_out: float = 0.6) -> None:
-    torch.manual_seed(42)
+
+
+def test(model_path: str = 's203557-danmarks-tekniske-universitet-dtu/G-WEB_Fraud_Detection/G-web-fraud-detection-model:latest', batchsize: int = 256, hdn_chnls: int = 16, atn_heads: int = 4,drop_out: float = 0.6) -> None:
+    torch.manual_seed(42)    
+    
     device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
     # Load dataset
@@ -18,6 +22,18 @@ def test(model_path: str, batchsize: int = 256, hdn_chnls: int = 16, atn_heads: 
     heads = atn_heads
     dropout = drop_out
 
+    run = wandb.init(
+        project="G-WEB_Fraud_Detection",
+        config={"batch_size": batchsize, "hidden_channels": hidden_channels, "heads": heads, "dropout": dropout},
+        job_type="test",
+        
+    )
+    
+    
+    
+    artifact = run.use_artifact('s203557-danmarks-tekniske-universitet-dtu/G-WEB_Fraud_Detection/G-web-fraud-detection-model:v0', type='model')
+    artifact_dir = artifact.download(root="models/")    
+    model_path = f"{artifact_dir}/model.pth"
 
     model = GCN(in_channels=data.num_features, hidden_channels=hidden_channels, out_channels=1, heads=heads,dropout=dropout)
     model.load_state_dict(torch.load(model_path))
@@ -36,18 +52,32 @@ def test(model_path: str, batchsize: int = 256, hdn_chnls: int = 16, atn_heads: 
 
     total_correct = 0
     total_samples = 0
+    confusion_matrix = torch.zeros(2, 2)
 
     with torch.no_grad():
         for test_data in test_loader:
             test_data.to(device)
             pred = model(test_data.x, test_data.edge_index, test_data.edge_attr)
+            pred.to(device)
             ground_truth = test_data.y
             predictions = (pred > 0.5).float() 
+            for t, p in zip(ground_truth, predictions):
+                confusion_matrix[t.long().to("cpu"), p.long().to("cpu")] += 1
+            
             total_correct += (predictions == ground_truth.unsqueeze(1)).sum().item()
             total_samples += len(ground_truth)
 
     accuracy = total_correct / total_samples if total_samples > 0 else 0
     print(f"Test Accuracy: {accuracy:.4f}")
+    wandb.log({"test_accuracy": accuracy})
+    
+    print(f"Confusion Matrix: \n{confusion_matrix}")
+    wandb.log({"confusion_matrix": wandb.plot.confusion_matrix(confusion_matrix)})
+    
+        
+    
+    
+    run.finish()    
     
 if __name__ == "__main__":
     typer.run(test)
