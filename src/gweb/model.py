@@ -39,7 +39,6 @@ def load_checkpoint(filepath):
 
     return model
 
-
 if __name__ == "__main__":
     # Example parameters for a simple graph
     in_channels = 16  # Number of features per node
