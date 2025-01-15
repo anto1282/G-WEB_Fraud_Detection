@@ -5,6 +5,7 @@ from data import AMLtoGraph
 import torch_geometric.transforms as T
 import typer
 import wandb
+import pdb
 
 
 
@@ -29,8 +30,6 @@ def test(model_path: str = 's203557-danmarks-tekniske-universitet-dtu/G-WEB_Frau
         
     )
     
-    
-    
     artifact = run.use_artifact('s203557-danmarks-tekniske-universitet-dtu/G-WEB_Fraud_Detection/G-web-fraud-detection-model:v0', type='model')
     artifact_dir = artifact.download(root="models/")    
     model_path = f"{artifact_dir}/model.pth"
@@ -52,8 +51,8 @@ def test(model_path: str = 's203557-danmarks-tekniske-universitet-dtu/G-WEB_Frau
 
     total_correct = 0
     total_samples = 0
-    confusion_matrix = torch.zeros(2, 2)
-
+    all_preds = []
+    all_labels = []
     with torch.no_grad():
         for test_data in test_loader:
             test_data.to(device)
@@ -61,18 +60,24 @@ def test(model_path: str = 's203557-danmarks-tekniske-universitet-dtu/G-WEB_Frau
             pred.to(device)
             ground_truth = test_data.y
             predictions = (pred > 0.5).float() 
-            for t, p in zip(ground_truth, predictions):
-                confusion_matrix[t.long().to("cpu"), p.long().to("cpu")] += 1
+            all_preds.extend(predictions.flatten().cpu().numpy())
+            all_labels.extend(ground_truth.flatten().cpu().numpy())
             
             total_correct += (predictions == ground_truth.unsqueeze(1)).sum().item()
             total_samples += len(ground_truth)
 
+    all_preds = [int(i) for i in all_preds]
+    all_labels = [int(i) for i in all_labels]
+    
     accuracy = total_correct / total_samples if total_samples > 0 else 0
     print(f"Test Accuracy: {accuracy:.4f}")
     wandb.log({"test_accuracy": accuracy})
     
-    print(f"Confusion Matrix: \n{confusion_matrix}")
-    wandb.log({"confusion_matrix": wandb.plot.confusion_matrix(confusion_matrix)})
+    class_names  = ["Normal", "Fraud"]
+    wandb.log({"conf_mat" : wandb.plot.confusion_matrix(probs=None,
+                        y_true=all_labels, preds=all_preds,
+                        class_names=class_names)})
+
     
         
     
