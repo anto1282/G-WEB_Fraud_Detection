@@ -72,6 +72,11 @@ cover/
 *.mo
 *.pot
 
+
+#WandB logs
+wandb/
+
+
 # Django stuff:
 *.log
 local_settings.py

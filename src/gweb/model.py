@@ -18,7 +18,7 @@ class GCN(torch.nn.Module):
         self.sigmoid = nn.Sigmoid()
         
 
-    def forward(self, x: torch.Tensor, edge_index: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, edge_index: torch.Tensor, edge_attr: torch.Tensor) -> torch.Tensor:
         x = F.dropout(x, p=self.dropout, training=self.training)
         x = F.elu(self.conv1(x, edge_index, edge_attr))
         x = F.dropout(x, p=self.dropout, training=self.training)
