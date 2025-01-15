@@ -26,7 +26,7 @@ dependencies = {file = ["requirements.txt"]}
 dev = {file = ['requirements_dev.txt']}
 
 [tool.ruff]
-line-length = 120
+line-length = 79
 
 [tool.coverage.run]
 omit = ["tests/*"]
