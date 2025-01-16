@@ -3,8 +3,8 @@ import torch_geometric.transforms as T
 from torch_geometric.loader import NeighborLoader
 import matplotlib.pyplot as plt
 import typer
-from model import GCN
-from data import AMLtoGraph
+from .model import GCN
+from .data import AMLtoGraph
 import wandb
 from sklearn.metrics import (
     accuracy_score,
@@ -165,5 +165,9 @@ def train(
     run.finish()
 
 
+
+def main():
+    train()
+
 if __name__ == "__main__":
-    typer.run(train)
+    main()
