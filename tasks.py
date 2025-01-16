@@ -30,9 +30,10 @@ def requirements(ctx: Context) -> None:
     ctx.run("pip install -e .", echo=True, pty=not WINDOWS)
 
 
-@task
-def requirements_dev(ctx: Context) -> None:
+@task(requirements)
+def requirementsdev(ctx: Context) -> None:
     """Install development requirements."""
+    ctx.run("pip install -r devrequirements.txt", echo=True, pty=not WINDOWS)
     ctx.run('pip install -e .["dev"]', echo=True, pty=not WINDOWS)
 
 
@@ -76,7 +77,7 @@ def docker_build(ctx: Context, progress: str = "plain") -> None:
 
 
 # Documentation commands
-@task(dev_requirements)
+@task(requirementsdev)
 def build_docs(ctx: Context) -> None:
     """Build documentation."""
     ctx.run(
@@ -86,7 +87,7 @@ def build_docs(ctx: Context) -> None:
     )
 
 
-@task(dev_requirements)
+@task(requirementsdev)
 def serve_docs(ctx: Context) -> None:
     """Serve documentation."""
     ctx.run(
