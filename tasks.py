@@ -22,7 +22,7 @@ def create_environment(ctx: Context) -> None:
 def requirements(ctx: Context) -> None:
     """Install project requirements."""
     ctx.run("pip install -U pip setuptools wheel", echo=True, pty=not WINDOWS)
-    ctx.run("pip install pip install torch torchvision torchaudio")
+    ctx.run("pip install torch torchvision torchaudio")
     ctx.run(
         "pip install torch-cluster torch-scatter torch-geometric torch-spline-conv torch-sparse"
     )
