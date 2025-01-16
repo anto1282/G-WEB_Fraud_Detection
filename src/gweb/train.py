@@ -25,7 +25,7 @@ def train(config=None) -> None:
     data = dataset[0]
 
     # Extract hyperparameters from the WandB config
-    run = wandb.init(config=config, entity="s203557")
+    run = wandb.init(config=config, entity="s203557", mode="online")
 
     # Extract hyperparameters from the WandB config
     lr = wandb.config.lr
