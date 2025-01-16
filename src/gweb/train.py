@@ -2,8 +2,8 @@ import torch
 import torch_geometric.transforms as T
 from torch_geometric.loader import NeighborLoader
 import typer
-from model import GCN
-from data import AMLtoGraph
+from .model import GCN
+from .data import AMLtoGraph
 import wandb
 
 
@@ -107,7 +107,10 @@ def train(config=None) -> None:
     run.finish()
 
 
+
+def main():
+    train()
+
 if __name__ == "__main__":
-    # Just in case you need to debug or run standalone training
-    print("Running training script as standalone.")
     typer.run(train)
+
