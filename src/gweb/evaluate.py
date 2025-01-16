@@ -45,7 +45,7 @@ def test(
     )
 
     artifact = run.use_artifact(
-        "s203557-danmarks-tekniske-universitet-dtu/G-WEB_Fraud_Detection/G-web-fraud-detection-model:v0",
+        model_path,
         type="model",
     )
     artifact_dir = artifact.download(root="models/")
