@@ -1,7 +1,7 @@
 import torch
 from torch_geometric.loader import NeighborLoader
-from model import GCN
-from data import AMLtoGraph
+from .model import GCN
+from .data import AMLtoGraph
 import torch_geometric.transforms as T
 import typer
 import wandb
@@ -115,5 +115,8 @@ def test(
     run.finish()
 
 
+def main():
+    test()
+
 if __name__ == "__main__":
-    typer.run(test)
+    main()
