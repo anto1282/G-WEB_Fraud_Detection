@@ -1,27 +1,49 @@
-import uvicorn
 import onnxruntime as ort
 import numpy as np
+import torch
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
-
+from torch_geometric.data import Data
+import os
+from http import HTTPStatus
 # Initialize FastAPI app
 app = FastAPI()
 
+# Get the absolute path to the model file relative to the current file
+current_dir = os.path.dirname(os.path.abspath(__file__))  # Path of the current file (api.py)
+onnx_model_path = os.path.join(current_dir, "..", "..", "models", "model.onnx")
+onnx_model_path = os.path.normpath(onnx_model_path)  # Normalize path for cross-platform compatibility
+
+# Debugging: Print the model path to confirm
+print(f"ONNX model path: {onnx_model_path}")
+
 # Load the ONNX model
-onnx_model_path = "model.onnx"  # Change this to the actual model 
-ort_session = ort.InferenceSession(onnx_model_path)
+try:
+    ort_session = ort.InferenceSession(onnx_model_path)
+    print("Model loaded successfully!")
+except Exception as e:
+    print(f"Error loading model: {e}")
+
 class TransactionData(BaseModel):
     node_features: List[List[float]]  # List of node feature vectors
     edge_index: List[List[int]]  # List of edge indices (source, target)
     edge_attr: List[List[float]]  # List of edge attributes
     batch_size: int  # Number of nodes (batch size)
     transaction_id: str  # Transaction ID for reference
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to the fraud detection API!"}
 
 # Health check endpoint
 @app.get("/healthcheck/")
 async def healthcheck():
+    response = {
+        "message": HTTPStatus.OK.phrase,
+        "status-code": HTTPStatus.OK,
+    }
     return {"status": "Healthy", "message": "Model loaded successfully"}
+
 
 # Prediction endpoint
 @app.post("/predict/")

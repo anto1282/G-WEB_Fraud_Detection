@@ -35,6 +35,9 @@ def requirementsdev(ctx: Context) -> None:
     """Install development requirements."""
     ctx.run("pip install -r dev_requirements.txt", echo=True, pty=not WINDOWS)
     ctx.run('pip install -e .["dev"]', echo=True, pty=not WINDOWS)
+    ctx.run(
+        "pip install fastapi"
+    )
 
 
 # Project commands
