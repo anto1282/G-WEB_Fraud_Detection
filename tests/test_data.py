@@ -3,11 +3,12 @@ import torch
 from torch_geometric.loader import NeighborLoader
 from src.gweb.data import AMLtoGraph
 from torch_geometric.transforms import RandomNodeSplit
+from tests import _PATH_DATA
 
 # Loading dataset:
 @pytest.fixture
 def dataset():
-    dataset = AMLtoGraph("/dtu/blackhole/0e/154958/data")
+    dataset = AMLtoGraph(_PATH_DATA)
     return dataset[0]  # Access the first data object
 
 def test_data_loading(dataset):
