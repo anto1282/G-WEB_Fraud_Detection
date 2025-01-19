@@ -8,3 +8,5 @@ typer==0.15.1
 wandb
 pytest
 coverage
+dvc
+dvc-gs
