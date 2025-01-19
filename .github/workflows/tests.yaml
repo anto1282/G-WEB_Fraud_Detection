@@ -39,6 +39,9 @@ jobs:
         with:
           credentials_json: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
 
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
       - name: Get data
         run: dvc pull
         env:
