@@ -42,7 +42,7 @@ jobs:
 
       - name: Modify DVC Remote
         run: |
-          dvc remote modify - local remote_storage credentialpath credentials_1.json
+          dvc remote modify --local remote_storage credentialpath credentials_1.json
 
       - name: DVC Pull Data
         run: |
