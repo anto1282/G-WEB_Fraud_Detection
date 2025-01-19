@@ -34,18 +34,19 @@ jobs:
           pip install -r requirements.txt
           pip list
 
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
-
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Get data
-        run: dvc pull
+      - name: Create credentials.json
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+          GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+        run: |
+          echo $GDRIVE_CREDENTIALS_DATA > credentials_1.json
+
+      - name: Modify DVC Remote
+        run: |
+          dvc remote modify - local myremote credentialpath credentials_1.json
+
+      - name: DVC Pull Data
+        run: |
+          dvc pull -v
 
       - name: Run tests & coverage
         run: |
