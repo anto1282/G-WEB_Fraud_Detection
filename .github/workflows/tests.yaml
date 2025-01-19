@@ -34,10 +34,12 @@ jobs:
           pip install -r requirements.txt
           pip list
 
-      - name: Set up DVC
-        uses: iterative/setup-dvc@v1
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
 
-      - name: Pull data with DVC
+      - name: Get data
         run: dvc pull
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
