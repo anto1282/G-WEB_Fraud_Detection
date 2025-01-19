@@ -11,16 +11,16 @@ from http import HTTPStatus
 app = FastAPI()
 
 # Get the absolute path to the model file relative to the current file
-current_dir = os.path.dirname(os.path.abspath(__file__))  # Path of the current file (api.py)
-onnx_model_path = os.path.join(current_dir, "..", "..", "models", "model.onnx")
-onnx_model_path = os.path.normpath(onnx_model_path)  # Normalize path for cross-platform compatibility
+import os
+current_dir = os.path.dirname(__file__)  # Get the current script's directory
+model_path = os.path.join(current_dir, '..', '..', '..', 'models', 'model_1_0.001_16.pth')
 
 # Debugging: Print the model path to confirm
-print(f"ONNX model path: {onnx_model_path}")
+print(f" model path: {model_path}")
 
-# Load the ONNX model
+# Load the model
 try:
-    ort_session = ort.InferenceSession(onnx_model_path)
+    ort_session = ort.InferenceSession(model_path)
     print("Model loaded successfully!")
 except Exception as e:
     print(f"Error loading model: {e}")
