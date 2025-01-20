@@ -1,0 +1,11 @@
+{
+    "parameters": {
+        "lr": 0.0005,
+        "batchsize": 512,
+        "hdn_chnls": 32,
+        "atn_heads": 8,
+        "drop_out": 0.6,
+        "epochs": 75,
+        "pos_weight": 50
+    }
+}

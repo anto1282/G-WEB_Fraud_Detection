@@ -10,7 +10,7 @@ MEMORY="10GB"                     # Memory per job
 EMAIL="your_email@domain.com"     # Email for notifications
 VENV_PATH="/dtu/blackhole/0e/154958/miniconda3/bin/activate MLOPS"  # Path to virtual env
 ENTITY="s203557-danmarks-tekniske-universitet-dtu"
-WORKDIR="zhome/b6/d/154958/mlops/G-WEB_Fraud_Detection/src/gweb/"
+WORKDIR="~/mlops/G-WEB_Fraud_Detection/src/gweb/"
 
 # Parse Arguments
 while [[ "$#" -gt 0 ]]; do
@@ -48,6 +48,7 @@ for ((i = 1; i <= AGENTS; i++)); do
 #BSUB -R \"rusage[mem=$MEMORY]\"
 #BSUB -u $EMAIL
 #BSUB -B
+#BSUB -env "LSB_JOB_REPORT_MAIL=N"
 #BSUB -N
 #BSUB -o agent_$i_%J.out
 #BSUB -e agent_$i_%J.err
@@ -59,8 +60,11 @@ module load cuda/11.3
 # Activate virtual environment
 source $VENV_PATH
 
-# Set working directory
-cd /
+# Set working directory, delete old tmp files, create new writable folder 
+cd $WORKDIR
+rm -rf tmp_agent_$i
+mkdir tmp_agent_$i
+export WANDB_DIR=tmp_agent_$i
 
 # Run WandB agent
 wandb agent $ENTITY/G-Web-Fraud-Detection/$SWEEP_ID

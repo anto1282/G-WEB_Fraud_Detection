@@ -10,3 +10,6 @@ pytest
 coverage
 dvc
 dvc-gs
+onnx 
+onnxruntime 
+onnxscript
