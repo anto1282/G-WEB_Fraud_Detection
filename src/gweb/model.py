@@ -47,7 +47,10 @@ class GCN(torch.nn.Module):
 
 
 def load_checkpoint(filepath):
-    checkpoint = torch.load(filepath)
+    
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    checkpoint = torch.load(filepath, map_location=device)
+    
     model = GCN(
         checkpoint["hidden_channels"],
         checkpoint["in_channels"],
