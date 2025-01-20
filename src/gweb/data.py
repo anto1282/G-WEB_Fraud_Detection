@@ -163,5 +163,5 @@ class AMLtoGraph(InMemoryDataset):
 
 
 if __name__ == "__main__":
-    data_set = AMLtoGraph("/dtu/blackhole/0e/154958/data")
+    data_set = AMLtoGraph("/dtu/blackhole/0e/154958/data_small")
     typer.run(data_set.preprocess)
