@@ -3,7 +3,7 @@ import wandb
 sweep_configuration = {
     "program": "train.py",
     "method": "bayes",
-    "metric": {"goal": "maximize", "name": "val_accuracy"},
+    "metric": {"goal": "maximize", "name": "f1_score"},
     "parameters": {
         "lr": {"min": 0.0001, "max": 0.001},
         "batchsize": {"values": [256, 512, 1024]},
