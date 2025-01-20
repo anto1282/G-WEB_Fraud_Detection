@@ -29,7 +29,7 @@ dev = {file = ['requirements_dev.txt']}
 line-length = 79
 
 [tool.coverage.run]
-omit = ["tests/*"]
+omit = ["tests/*", "/tmp/*"]
 
 [project.scripts]
 train = "gweb.train:main"
