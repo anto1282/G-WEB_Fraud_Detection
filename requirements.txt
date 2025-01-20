@@ -9,3 +9,7 @@ wandb
 onnx 
 onnxruntime 
 onnxscript
+pytest
+coverage
+dvc
+dvc-gs

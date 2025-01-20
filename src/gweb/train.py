@@ -4,8 +4,8 @@ import torch_geometric.transforms as T
 from torch_geometric.loader import NeighborLoader
 import typer
 from sklearn.metrics import f1_score
-from model import GCN
-from data import AMLtoGraph
+from .model import GCN
+from .data import AMLtoGraph
 import wandb
 import numpy as np
 import os
@@ -176,7 +176,11 @@ def train(config=None) -> None:
     print(f"ONNX model {model_name} logged to W&B as an artifact")
 
 
+
+def main():
+    train()
+
 if __name__ == "__main__":
-    # Just in case you need to debug or run standalone training
     print("Running training script")
     typer.run(train)
+

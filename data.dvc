@@ -1,0 +1,11 @@
+outs:
+- hash: md5
+  path: data
+  files:
+  - relpath: raw/HI-Small_Trans.csv
+    md5: 9667f3a6323e6ad88e699acf42db9157
+    size: 475664283
+    cloud:
+      remote_storage:
+        etag: 08f2a8d8ab96828b031001
+        version_id: '1737303088567410'

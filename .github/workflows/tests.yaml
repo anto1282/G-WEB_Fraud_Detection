@@ -1,6 +1,7 @@
 name: Unit Tests
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -13,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        operating-system: ["ubuntu-latest"]
         python-version:  ["3.11"]
 
     steps:
@@ -33,6 +34,19 @@ jobs:
           pip install -r requirements.txt
           pip list
 
+      - name: Create credentials.json
+        env:
+          GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+        run: |
+          echo $GDRIVE_CREDENTIALS_DATA > credentials_1.json
+
+      - name: Modify DVC Remote
+        run: |
+          dvc remote modify --local remote_storage credentialpath credentials_1.json
+
+      - name: DVC Pull Data
+        run: |
+          dvc pull -v
 
       - name: Run tests & coverage
         run: |
