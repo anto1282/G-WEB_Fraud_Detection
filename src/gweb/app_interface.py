@@ -4,8 +4,6 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
-import torch
-import torch
 import torch.optim.sgd
 import torch_geometric.transforms as T
 from torch_geometric.loader import NeighborLoader
@@ -13,13 +11,9 @@ import typer
 from sklearn.metrics import f1_score
 from model import GCN
 from data import AMLtoGraph
-import wandb
-import numpy as np
 import os
-import torch
-from torch_geometric.loader import NeighborLoader
-import torch_geometric.transforms as T
-import typer
+
+
 # API URL
 api_url = "http://127.0.0.1:8000/predict/"
 
@@ -53,6 +47,7 @@ if option == "Start Fraud Detection":
 
     # Button to make prediction
     if st.button("Predict"):
+        
         if node_features.size == 0 or edge_index.size == 0 or edge_attr.size == 0:
             st.error("Please enter valid node features, edge indices, and edge attributes.")
         else:
