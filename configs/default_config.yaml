@@ -1,0 +1,8 @@
+program: src/gweb/train.py
+lr: 0.01
+batchsize: 32
+hdn_chnls: 64
+atn_heads: 4
+drop_out: 0.5
+epochs: 50
+pos_weight: 2.0

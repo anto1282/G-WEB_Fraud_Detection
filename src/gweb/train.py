@@ -148,7 +148,6 @@ def train(config=None) -> None:
     os.makedirs(output_dir, exist_ok=True)  # Ensure the directory exists
     output_path = os.path.join(output_dir, model_name)
 
-    # Export to ONNX
     torch.onnx.export(
         model,
         args=dummy_input,  # Ensure arguments match the model's forward method
@@ -157,6 +156,24 @@ def train(config=None) -> None:
         export_options=torch.onnx.ExportOptions(dynamic_shapes=True),
     )
     print(f"Model saved as {model_name}")
+    
+    
+    artifact = wandb.Artifact(
+        name="onnx_model",
+        type="model",
+        description="Exported ONNX model",
+        metadata={
+            "lr": wandb.config.lr,
+            "batchsize": wandb.config.batchsize,
+            "dropout": wandb.config.drop_out,
+            "epochs": wandb.config.epochs,
+        },
+    )
+
+    artifact.add_file(output_path)
+
+    wandb.log_artifact(artifact)
+    print(f"ONNX model {model_name} logged to W&B as an artifact")
 
 
 if __name__ == "__main__":
