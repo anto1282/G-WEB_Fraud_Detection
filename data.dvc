@@ -2,6 +2,15 @@ outs:
 - hash: md5
   path: data
   files:
+  - relpath: processed/data.pt
+    md5: ff96775bfd9b7056ad41d9db06269434
+    size: 269067128
+  - relpath: processed/pre_filter.pt
+    md5: 4bf6b4e4c38160b8add42f11e4d1ea1b
+    size: 864
+  - relpath: processed/pre_transform.pt
+    md5: 4bf6b4e4c38160b8add42f11e4d1ea1b
+    size: 864
   - relpath: raw/HI-Small_Trans.csv
     md5: 9667f3a6323e6ad88e699acf42db9157
     size: 475664283
