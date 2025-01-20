@@ -5,12 +5,24 @@ outs:
   - relpath: processed/data.pt
     md5: ff96775bfd9b7056ad41d9db06269434
     size: 269067128
+    cloud:
+      remote_storage:
+        etag: 08d2aec2e6c5848b031001
+        version_id: '1737384547882834'
   - relpath: processed/pre_filter.pt
     md5: 4bf6b4e4c38160b8add42f11e4d1ea1b
     size: 864
+    cloud:
+      remote_storage:
+        etag: 08afd7d9e6c5848b031001
+        version_id: '1737384548264879'
   - relpath: processed/pre_transform.pt
     md5: 4bf6b4e4c38160b8add42f11e4d1ea1b
     size: 864
+    cloud:
+      remote_storage:
+        etag: 089ca4dde6c5848b031001
+        version_id: '1737384548323868'
   - relpath: raw/HI-Small_Trans.csv
     md5: 9667f3a6323e6ad88e699acf42db9157
     size: 475664283
