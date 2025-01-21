@@ -4,14 +4,21 @@ import torch_geometric.transforms as T
 from torch_geometric.loader import NeighborLoader
 import typer
 from sklearn.metrics import f1_score
-from .model import GCN
-from .data import AMLtoGraph
+from model import GCN
+from data import AMLtoGraph
 import wandb
 import numpy as np
 import os
+from gweb import _PATH_DATA
 
 
-def train(config=None) -> None:
+def train(test_mode=False, config=None) -> None:
+
+    if test_mode:
+        path = os.path.join(_PATH_DATA, "test")
+    else:
+        path = _PATH_DATA
+
     torch.manual_seed(42)
     device = torch.device(
         "cuda"
@@ -20,11 +27,11 @@ def train(config=None) -> None:
         if torch.backends.mps.is_available()
         else "cpu"
     )
-    dataset = AMLtoGraph("/dtu/blackhole/0e/154958/data_small")  # Adjust path
+    dataset = AMLtoGraph(path)  # Adjust path
     data = dataset[0]
 
     # Extract hyperparameters from the WandB config
-    run = wandb.init(config=config, entity="s203557")
+    run = wandb.init(config=config, entity="s203557-danmarks-tekniske-universitet-dtu")
 
     # Extract hyperparameters from the WandB config
     lr = wandb.config.lr

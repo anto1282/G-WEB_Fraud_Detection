@@ -22,10 +22,8 @@ def create_environment(ctx: Context) -> None:
 def requirements(ctx: Context) -> None:
     """Install project requirements."""
     ctx.run("pip install -U pip setuptools wheel", echo=True, pty=not WINDOWS)
-    ctx.run("pip install torch torchvision torchaudio")
-    ctx.run(
-        "pip install torch-cluster torch-scatter torch-geometric torch-spline-conv torch-sparse"
-    )
+    ctx.run("pip install torch torchvision torchaudio") # these need to be installed before torch-geometric
+    ctx.run("pip install torch-cluster torch-scatter torch-geometric torch-spline-conv torch-sparse") # the order of these is important
     ctx.run("pip install -r requirements.txt", echo=True, pty=not WINDOWS)
     ctx.run("pip install -e .", echo=True, pty=not WINDOWS)
 
@@ -42,16 +40,16 @@ def requirementsdev(ctx: Context) -> None:
 def preprocess_data(ctx: Context) -> None:
     """Preprocess data."""
     ctx.run(
-        f"python src/{PROJECT_NAME}/data.py data/raw data/processed",
+        f"python src/{PROJECT_NAME}/data.py",
         echo=True,
         pty=not WINDOWS,
     )
 
 
-@task
-def train(ctx: Context) -> None:
+@task()
+def train(ctx: Context, test_mode=False) -> None:
     """Train model."""
-    ctx.run(f"python src/{PROJECT_NAME}/train.py", echo=True, pty=not WINDOWS)
+    ctx.run(f"python src/{PROJECT_NAME}/train.py --config configs/default_experiment_config.yaml --test-mode {test_mode}", echo=True, pty=not WINDOWS)
 
 
 @task
