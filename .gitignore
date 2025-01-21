@@ -1,7 +1,8 @@
 docs/site/
 #Models
-models
-
+models/*
+models/
+./models
 # test cache
 manual_test/
 
