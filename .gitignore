@@ -1,8 +1,8 @@
 docs/site/
 #Models
-models/*
-models/
-./models
+models/model*.onnx
+
+
 # test cache
 manual_test/
 
