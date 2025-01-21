@@ -12,6 +12,8 @@ from sklearn.metrics import f1_score
 from model import GCN
 from data import AMLtoGraph
 import os
+import time 
+#from evaluate import test 
 
 
 # API URL
@@ -25,57 +27,28 @@ option = st.selectbox("Choose an option", ["Visualize Transactions", "Start Frau
 
 # Start Fraud Detection flow
 if option == "Start Fraud Detection":
-    st.header("Enter Transaction Data")
+    st.header("Press button to start testing model on fraud data")
+    # possible layout for training... 
+    # should be changed to testing. 
 
     # Input: Transaction ID
-    transaction_id = st.text_input("Transaction ID")
+    # Show the "Start Test" button to begin the input flow
+    model_path = st.text_input("Model Path", "s203557-danmarks-tekniske-universitet-dtu/G-WEB_Fraud_Detection/G-web-fraud-detection-model:latest")
+    batch_size = st.number_input("Batch Size", min_value=1, max_value=1024, value=256)
+    hidden_channels = st.number_input("Hidden Channels", min_value=1, max_value=128, value=16)
+    attention_heads = st.number_input("Attention Heads", min_value=1, max_value=16, value=4)
+    dropout_rate = st.slider("Dropout Rate", min_value=0.0, max_value=1.0, value=0.6)
+    
+    start_button = st.button("Start Test", help="Click to start fraud detection test")
 
-    # Input: Node Features
-    st.subheader("Node Features (List of floating point numbers)")
-    node_features_input = st.text_area("Enter Node Features (e.g., [1.0, 2.0, 3.0, ...])", value="")
-    node_features = np.array(eval(node_features_input), dtype=np.float32) if node_features_input else np.array([])
+    if start_button:
+        # Once the button is clicked, show the inputs for transaction data
+        # Once the button is clicked, show the inputs for transaction data
+        with st.spinner('The model is testing on data...'):
+            test(model_path=model_path,batchsize=batch_size,hdn_chnls=hidden_channels,atn_heads=attention_heads,drop_out=dropout_rate)
 
-    # Input: Edge Indices
-    st.subheader("Edge Index (List of pairs of integers)")
-    edge_index_input = st.text_area("Enter Edge Index (e.g., [[0, 1], [1, 2], ...])", value="")
-    edge_index = np.array(eval(edge_index_input), dtype=np.int64) if edge_index_input else np.array([])
-
-    # Input: Edge Attributes
-    st.subheader("Edge Attributes (List of floating point numbers)")
-    edge_attr_input = st.text_area("Enter Edge Attributes (e.g., [0.1, 0.2, 0.3, ...])", value="")
-    edge_attr = np.array(eval(edge_attr_input), dtype=np.float32) if edge_attr_input else np.array([])
-
-    # Button to make prediction
-    if st.button("Predict"):
-        
-        if node_features.size == 0 or edge_index.size == 0 or edge_attr.size == 0:
-            st.error("Please enter valid node features, edge indices, and edge attributes.")
-        else:
-            # Prepare the data as a dictionary for POST request
-            payload = {
-                "node_features": node_features.tolist(),
-                "edge_index": edge_index.tolist(),
-                "edge_attr": edge_attr.tolist(),
-                "batch_size": len(node_features),  # Assuming batch size is equal to number of nodes
-                "transaction_id": transaction_id
-            }
-
-            try:
-                # Send POST request to FastAPI
-                response = requests.post(api_url, json=payload)
-
-                # Check if the response is successful
-                if response.status_code == 200:
-                    result = response.json()
-                    prediction = result["prediction"]
-                    confidence = result["confidence"]
-                    st.success(f"Prediction: {prediction}")
-                    st.write(f"Confidence: {confidence:.4f}")
-                    st.write(f"Transaction ID: {result['transaction_id']}")
-                else:
-                    st.error(f"Error from API: {response.status_code}")
-            except Exception as e:
-                st.error(f"Error during prediction request: {e}")
+    # After evaluation, display a success message
+    st.success("Model evaluation completed!")
 
 # Visualize Transactions flow
 elif option == "Visualize Transactions":
@@ -88,7 +61,7 @@ elif option == "Visualize Transactions":
     data = dataset[0]
     split = T.RandomNodeSplit(split="train_rest", num_val=0.2, num_test=0.1)
     data = split(data)
-    test_loader = NeighborLoader(data,num_neighbors=[30] * 2,batch_size=1000,input_nodes=data.test_mask)
+    test_loader = NeighborLoader(data,num_neighbors=[30] * 2,batch_size=200,input_nodes=data.test_mask)
     
     
         
@@ -107,6 +80,50 @@ elif option == "Visualize Transactions":
     # Create a subgraph that contains only fraud nodes
     # Extract the edges corresponding to the fraud nodes
     edge_index_batch = batch.edge_index.numpy()
+    # showing entire graph
+    edges = []
+    for edge in zip(edge_index_batch[0], edge_index_batch[1]):
+        edges.append(edge)
+
+    # Create a graph using NetworkX
+    G = nx.Graph()
+
+    # Add the edges to the subgraph
+    G.add_edges_from(edges)
+    G.remove_edges_from([edge for edge in G.edges() if edge[0] == edge[1]])
+
+    # Create node positions for visualization (using the feature vectors as positions)
+    # Use NetworkX's circular layout to compute positions
+    node_positions = nx.circular_layout(G)
+
+
+    # Plot the fraud-only subgraph
+    plt.figure(figsize=(8, 8))
+    nx.draw(G, pos=node_positions, with_labels=True, node_color='red', node_size=20, font_size=10)
+    plt.title("Graph Visualization")
+    st.pyplot(plt)
+    
+    # showing the non fraud graph 
+    non_fraud_edges = []
+    for edge in zip(edge_index_batch[0], edge_index_batch[1]):
+        if edge[0] in non_fraud_node_ids and edge[1] in non_fraud_node_ids:
+            non_fraud_edges.append(edge)
+
+    # Create a subgraph using NetworkX
+    G_batch_nonfraud = nx.Graph()
+
+    # Add the fraud edges to the subgraph
+    G_batch_nonfraud.add_edges_from(non_fraud_edges)
+    G_batch_nonfraud.remove_edges_from([edge for edge in G_batch_nonfraud.edges() if edge[0] == edge[1]])
+
+    # Create node positions for visualization (using the feature vectors as positions)
+    node_positions_nonfraud = nx.circular_layout(G_batch_nonfraud)
+
+    # Plot the fraud-only subgraph
+    plt.figure(figsize=(8, 8))
+    nx.draw(G_batch_nonfraud, pos=node_positions_nonfraud, with_labels=True, node_color='blue', node_size=300, font_size=10)
+    plt.title(f"Normal transactions Subgraph Visualization")
+    st.pyplot(plt)
     
     # Showing the fraud graph
     # Filter edges that connect to fraud nodes
@@ -123,8 +140,7 @@ elif option == "Visualize Transactions":
     G_batch_fraud.remove_edges_from([edge for edge in G_batch_fraud.edges() if edge[0] == edge[1]])
 
     # Create node positions for visualization (using the feature vectors as positions)
-    node_positions_fraud = {node: (node_features[i, 0], node_features[i, 1]) 
-                            for i, node in enumerate(node_ids) if node in fraud_node_ids}
+    node_positions_fraud = nx.circular_layout(G_batch_fraud)
 
     # Plot the fraud-only subgraph
     plt.figure(figsize=(8, 8))
@@ -137,23 +153,6 @@ elif option == "Visualize Transactions":
         if edge[0] in non_fraud_node_ids and edge[1] in non_fraud_node_ids:
             non_fraud_edges.append(edge)
 
-    # Create a subgraph using NetworkX
-    G_batch_nonfraud = nx.Graph()
-
-    # Add the fraud edges to the subgraph
-    G_batch_nonfraud.add_edges_from(non_fraud_edges)
-    G_batch_nonfraud.remove_edges_from([edge for edge in G_batch_nonfraud.edges() if edge[0] == edge[1]])
-
-    # Create node positions for visualization (using the feature vectors as positions)
-    node_positions_nonfraud = {node: (node_features[i, 0], node_features[i, 1]) 
-                            for i, node in enumerate(node_ids) if node in non_fraud_node_ids}
-
-    # Plot the fraud-only subgraph
-    plt.figure(figsize=(8, 8))
-    nx.draw(G_batch_nonfraud, pos=node_positions_nonfraud, with_labels=True, node_color='blue', node_size=300, font_size=10)
-    plt.title("Normal transactions Subgraph Visualization")
-    st.pyplot(plt)
-
     
         # Convert the fraud subgraph to a directed graph
     degreesfraud = [G_batch_fraud.degree(n) for n in G_batch_fraud.nodes()]
@@ -162,7 +161,6 @@ elif option == "Visualize Transactions":
     
     plt.figure(figsize=(8, 6))
 
-# Plot the fraud degree distribution (in red)
     
 
 # Plot the non-fraud degree distribution (in blue)
