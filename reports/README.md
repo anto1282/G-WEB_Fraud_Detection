@@ -142,8 +142,8 @@ Group 97
 > *package to do ... and ... in our project*.
 >
 > Answer:
-
 --- question 3 fill here ---
+We chose to use the PyTorch-geometric framework to support the project. We use the framework to create the data set and to be able to sample batches of the graph. Furthermore we use the built-in Graph Attention Network to create neural networks based on graph structures. 
 
 ## Coding environment
 
@@ -295,6 +295,7 @@ We did not utilize branches and pull requests for this project. Instead, we work
 > Answer:
 
 --- question 12 fill here ---
+We used config files in yaml format to parse arguments to the training. We have 7 different parameters which could be tuned. Learning rate, batchsize, nr. of channels in hidden layer, nr. of attention heads, drop fraction, number of epochs and a loss function regularization weight. 
 
 ### Question 13
 
@@ -310,6 +311,8 @@ We did not utilize branches and pull requests for this project. Instead, we work
 > Answer:
 
 --- question 13 fill here ---
+We performed a hyperparameter sweep using WandB. The metadata and configurations for these run are saved in the project and linked to each run. We also chose to save the models that were trained as artifacts in WandB. The metadata are attached to the models, so it is possible to reproduce results. 
+If the training is run outside of a sweep the data is also stored in WandB as a single run. 
 
 ### Question 14
 
