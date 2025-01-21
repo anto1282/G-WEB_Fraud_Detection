@@ -21,6 +21,7 @@ from gweb import _PATH_DATA
 
 def train(test_mode=False, config=None) -> None:
 
+    # Use smaller dataset for testing
     if test_mode:
         path = os.path.join(_PATH_DATA, "test")
     else:
@@ -34,7 +35,18 @@ def train(test_mode=False, config=None) -> None:
         if torch.backends.mps.is_available()
         else "cpu"
     )
-    dataset = AMLtoGraph(path)  # Adjust path
+
+    # Necessary to avoid error when running in a container
+    try:
+        dataset = AMLtoGraph(path)
+    except FileNotFoundError:
+        if test_mode:
+            path = os.path.join("/app/data", "test")
+        else:
+            path = "/app/data"
+
+        dataset = AMLtoGraph(path)
+    
     data = dataset[0]
 
     # Extract hyperparameters from the WandB config
