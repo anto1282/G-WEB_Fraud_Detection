@@ -4,8 +4,15 @@ import torch_geometric.transforms as T
 from torch_geometric.loader import NeighborLoader
 import typer
 from sklearn.metrics import f1_score
-from .model import GCN
-from .data import AMLtoGraph
+
+try:
+    from .model import GCN  # Relative import
+except ImportError:
+    from model import GCN  # Absolute import
+try:
+    from .data import AMLtoGraph
+except ImportError:
+    from data import AMLtoGraph
 import wandb
 import numpy as np
 import os
@@ -34,6 +41,7 @@ def train(config=None) -> None:
     drop_out = wandb.config.drop_out
     epochs = wandb.config.epochs
     pos_weight = torch.tensor([wandb.config.pos_weight]).to(device)
+    patience = 16
 
     print(
         f"Running with config: lr={lr}, batchsize={batchsize}, hdn_chnls={hdn_chnls}, atn_heads={atn_heads}, drop_out={drop_out}, epochs={epochs}, pos_weight={pos_weight}"
@@ -70,6 +78,9 @@ def train(config=None) -> None:
 
     statistics = {"train_loss": [], "val_accuracy": [], "f1_score": []}
 
+    best_val_score = float("-inf")
+    patience_counter = 0  # Tracks epochs without improvement
+
     for i in range(epochs):
         total_loss = 0
         model.train()
@@ -87,7 +98,7 @@ def train(config=None) -> None:
         total = 0
         all_preds = []
         all_labels = []
-        if i % 1 == 0:
+        if i % 2 == 0:
             with torch.no_grad():
                 for val_data in val_loader:
                     val_data.to(device)
@@ -121,11 +132,20 @@ def train(config=None) -> None:
 
             wandb.log({"val_accuracy": val_acc, "f1_score": f1})
 
-        # Log metrics
+        ## Early stopping logic
+        if f1 > best_val_score:
+            best_val_score = f1
+            patience_counter = 0
+            print(f"Epoch {i}: New best model with F1 score: {f1:.4f}")
+        else:
+            patience_counter += 1
+
+        if patience_counter >= patience:
+            break
+
         statistics["train_loss"].append(total_loss)
         wandb.log({"train_loss": total_loss})
 
-    run.finish()
     data = next(iter(train_loader))
     dummy_input = (
         data.x.to(device),
@@ -156,8 +176,7 @@ def train(config=None) -> None:
         export_options=torch.onnx.ExportOptions(dynamic_shapes=True),
     )
     print(f"Model saved as {model_name}")
-    
-    
+
     artifact = wandb.Artifact(
         name="onnx_model",
         type="model",
@@ -175,12 +194,13 @@ def train(config=None) -> None:
     wandb.log_artifact(artifact)
     print(f"ONNX model {model_name} logged to W&B as an artifact")
 
+    run.finish()
 
 
 def main():
     train()
 
+
 if __name__ == "__main__":
     print("Running training script")
     typer.run(train)
-
