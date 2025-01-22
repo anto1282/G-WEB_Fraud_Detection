@@ -12,7 +12,9 @@ steps:
     '-t',
     'europe-west10-docker.pkg.dev/dtumlops-448010/gweb-container-registry/train',
     '-f',
-    'dockerfiles/train.dockerfile'
+    'dockerfiles/train.dockerfile',
+    '--build-arg',
+    'BUILDKIT_INLINE_CACHE=1'
   ]
 
 - name: 'gcr.io/cloud-builders/docker'

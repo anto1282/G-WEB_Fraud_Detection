@@ -70,5 +70,5 @@ jobs:
 
     - name: Submit build
       run: |
-        gcloud builds submit . --config cloudbuild.yaml
+        gcloud builds submit --cache . --config cloudbuild.yaml
 
