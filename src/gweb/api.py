@@ -8,28 +8,29 @@ from torch_geometric.data import Data
 import os
 from http import HTTPStatus
 from pathlib import Path 
-from model import GCN, load_checkpoint  # Replace 'gcn_model' with the correct file name
-from evaluate import test 
+from evaluate_API import test 
+import streamlit as st
+import requests
+import numpy as np
+import pandas as pd
+import networkx as nx
+import matplotlib.pyplot as plt
+import torch.optim.sgd
+import torch_geometric.transforms as T
+from torch_geometric.loader import NeighborLoader
+import typer
+from sklearn.metrics import f1_score
+from model import GCN
+from data import AMLtoGraph
+import os
+import time 
+from evaluate_API import test
+import seaborn as sns 
+import logging
 # Initialize FastAPI app
+logging.basicConfig(level=logging.DEBUG)
 app = FastAPI()
 
-model_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..','..', 'models', 'model_lr-2_83e-04_bs-1024_dropout-0_55_epochs-50.onnx'))
-
-print(f"Expected model path: {model_path}")
-#onnx_model = onnx.load("fashion_mnist_model.onnx")
-# Load the model (ONNX format)
-try:
-    ort_session = ort.InferenceSession(model_path)
-    print("Model loaded successfully!")
-except Exception as e:
-    print(f"Error loading model: {e}")
-
-class TransactionData(BaseModel):
-    node_features: List[List[float]]  # List of node feature vectors
-    edge_index: List[List[int]]  # List of edge indices (source, target)
-    edge_attr: List[List[float]]  # List of edge attributes
-    batch_size: int  # Number of nodes (batch size)
-    transaction_id: str  # Transaction ID for reference
 @app.get("/")
 async def read_root():
     return {"message": "Welcome to the fraud detection API!"}
@@ -46,34 +47,79 @@ async def healthcheck():
 
 # Prediction endpoint
 @app.post("/predict/")
-async def predict_money_laundering(data: TransactionData):
+async def predict_money_laundering():
     try:
-        # Convert the input into PyTorch Geometric Data object
-        edge_index = torch.tensor(data.edge_index, dtype=torch.long).t().contiguous()
-        edge_attr = torch.tensor(data.edge_attr, dtype=torch.float32)
-        x = torch.tensor(data.node_features, dtype=torch.float32)
+        # Call the test function to get accuracy and confusion matrix
+        accuracy, cm = test()
 
-        # Create the PyTorch Geometric Data object
-        graph_data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
-        
-        # Ensure the input has the right shape and batch processing is applied
-        input_data = graph_data.x.numpy()  # Convert to NumPy array for ONNX inference
-
-        # Run inference using ONNX Runtime
-        inputs = {ort_session.get_inputs()[0].name: input_data}
-        outputs = ort_session.run(None, inputs)
-        
-        # Extract the prediction from the model output (e.g., if output > 0.5, it's suspicious)
-        result = outputs[0]  # Assuming the first output is the prediction
-        prediction = "Money laundering" if result[0] > 0.5 else "Not suspicious"
-        confidence = result[0]
-
-        # Return the result
-        return {
-            "transaction_id": data.transaction_id,
-            "prediction": prediction,
-            "confidence": confidence
-        }
-
+        # Return accuracy and confusion matrix in the response
+        return {"accuracy": accuracy, "confusion_matrix": cm.tolist()}  # cm is likely a numpy array, so convert it to list
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+        raise HTTPException(status_code=502, detail=f"Prediction failed: {str(e)}")
+    
+
+# data-visualization endpoint
+@app.post("/dataviz/")
+async def dataviz():
+    try:
+        dataset = AMLtoGraph("/dtu/blackhole/0e/154958/data_small")  
+        data = dataset[0]
+        split = T.RandomNodeSplit(split="train_rest", num_val=0.2, num_test=0.1)
+        data = split(data)
+        test_loader = NeighborLoader(data,num_neighbors=[30] * 2,batch_size=600,input_nodes=data.test_mask)
+        for batch in test_loader:
+            break  # We only need the first batch for visualization
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"batch not found: {str(e)}")
+
+    try: 
+        # Extract the batch's node indices (n_id) and the corresponding node features (x) and labels (y)
+        node_ids = batch.n_id.numpy()  # Node indices for the current batch
+        node_features = data.x[node_ids]  # Features for the nodes in the batch
+        node_labels = data.y[node_ids]  # Labels for the nodes in the batch
+
+        # Find fraud nodes (assuming 1 is fraud)
+        fraud_node_ids = node_ids[node_labels == 1]
+        non_fraud_node_ids = node_ids[node_labels == 0]
+        edge_index_batch = batch.edge_index .numpy()
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f" failed 2: {str(e)}")
+    try:
+        # the non fraud graph 
+        non_fraud_edges = []
+        for edge in zip(edge_index_batch[0], edge_index_batch[1]):
+            if edge[0] in non_fraud_node_ids and edge[1] in non_fraud_node_ids:
+                non_fraud_edges.append((int(edge[0]),int(edge[1])))
+
+
+        
+        # the fraud graph
+        fraud_edges = []
+        for edge in zip(edge_index_batch[0], edge_index_batch[1]):
+            if edge[0] in fraud_node_ids and edge[1] in fraud_node_ids:
+                fraud_edges.append((int(edge[0]),int(edge[1])))
+
+        
+
+        # the entire graph
+        edges = []
+        for edge in zip(edge_index_batch[0], edge_index_batch[1]):
+            if (edge[0] in non_fraud_node_ids and edge[1] in non_fraud_node_ids) or (edge[0] in fraud_node_ids and edge[1] in fraud_node_ids) :
+                edges.append((int(edge[0]),int(edge[1])))
+
+        # Create a graph using NetworkX
+        
+    except Exception as e:
+        raise HTTPException(status_code=504, detail=f" failed at last: {str(e)}")
+    try:
+        # Degrees
+        
+        #logging.debug({"edges": edges.tolist(), "fraud_edges": fraud_edges.tolist(), "non_fraud_edges": non_fraud_edges.tolist(), "degreesfraud": degreesfraud.tolist(), "degreesnonfraud": degreesnonfraud.tolist()})
+
+        # Return accuracy and confusion matrix in the response
+        #return {"degreesfraud": degreesfraud.tolist(), "degreesnonfraud": degreesnonfraud.tolist() }  # cm is likely a numpy array, so convert it}
+        return {"edges": edges, "fraud_edges": fraud_edges, "non_fraud_edges": non_fraud_edges} # cm is likely a numpy array, so convert it to list
+    except Exception as e:
+        response = {"edges": edges, "fraud_edges": fraud_edges.tolist(), "non_fraud_edges": non_fraud_edges.tolist()}
+        raise HTTPException(status_code=505, detail=f"Prediction failed: {str(e)} {response}")
+    
