@@ -11,7 +11,7 @@ steps:
     '.',
     '-t', 'europe-west10-docker.pkg.dev/dtumlops-448010/gweb-container-registry/train',
     '-f', 'dockerfiles/train.dockerfile',
-    '--cache-from', 'europe-west10-docker.pkg.dev/dtumlops-448010/gweb-container-registry/train'
+    '--cache-from', 'europe-west10-docker.pkg.dev/dtumlops-448010/gweb-container-registry/train:latest'
   ]
 
 - name: 'gcr.io/cloud-builders/docker'
