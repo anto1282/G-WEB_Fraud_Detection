@@ -9,12 +9,9 @@ steps:
   args: [
     'build',
     '.',
-    '-t',
-    'europe-west10-docker.pkg.dev/dtumlops-448010/gweb-container-registry/train',
-    '-f',
-    'dockerfiles/train.dockerfile',
-    '--build-arg',
-    'BUILDKIT_INLINE_CACHE=1'
+    '-t', 'europe-west10-docker.pkg.dev/dtumlops-448010/gweb-container-registry/train',
+    '-f', 'dockerfiles/train.dockerfile',
+    '--cache-from', 'europe-west10-docker.pkg.dev/dtumlops-448010/gweb-container-registry/train'
   ]
 
 - name: 'gcr.io/cloud-builders/docker'
