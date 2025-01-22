@@ -9,6 +9,7 @@ import os
 from http import HTTPStatus
 from pathlib import Path 
 from model import GCN, load_checkpoint  # Replace 'gcn_model' with the correct file name
+from evaluate import test 
 # Initialize FastAPI app
 app = FastAPI()
 
