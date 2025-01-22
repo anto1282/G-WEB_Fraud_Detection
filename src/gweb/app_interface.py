@@ -18,7 +18,7 @@ import seaborn as sns
 #from evaluate import test 
 
 
-# API URL
+# API URL for prediction
 api_url = "http://127.0.0.1:8000/predict/"
 
 # Streamlit UI
@@ -39,9 +39,15 @@ if option == "Start Fraud Detection":
 
     if start_button:
         # Once the button is clicked, show the inputs for transaction data
-        # Once the button is clicked, show the inputs for transaction data
         with st.spinner('The model is testing on data...'):
-            accuracy, cm = test()
+            response = requests.post(api_url)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+                # Get the results from the response
+            results = response.json()  # Should return a JSON with 'accuracy' and 'confusion_matrix'
+                # Display the results in the Streamlit UI
+            accuracy = results.get("accuracy", "Not available")
+            cm = results.get("confusion_matrix", "Not available")
+
 
     # After evaluation, display a success message
         st.success("Model evaluation completed!")
@@ -57,7 +63,7 @@ if option == "Start Fraud Detection":
 
 # Visualize Transactions flow
 elif option == "Visualize Transactions":
-    st.header("Transaction Visualization")
+    st.header("Transaction Visualization of batch from the testset")
 
     # Input: Transaction data (for visualization purposes)
     st.subheader("Information about Transaction Data")
@@ -66,7 +72,7 @@ elif option == "Visualize Transactions":
     data = dataset[0]
     split = T.RandomNodeSplit(split="train_rest", num_val=0.2, num_test=0.1)
     data = split(data)
-    test_loader = NeighborLoader(data,num_neighbors=[30] * 2,batch_size=200,input_nodes=data.test_mask)
+    test_loader = NeighborLoader(data,num_neighbors=[30] * 2,batch_size=600,input_nodes=data.test_mask)
     
     
         
@@ -106,7 +112,7 @@ elif option == "Visualize Transactions":
 
     # Plot the fraud-only subgraph
     plt.figure(figsize=(8, 8))
-    nx.draw(G_batch_nonfraud, pos=node_positions_nonfraud, with_labels=True, node_color='blue', node_size=300, font_size=10)
+    nx.draw(G_batch_nonfraud, pos=node_positions_nonfraud, with_labels=False, node_color='blue', node_size=100, font_size=10)
     plt.title(f"Normal transactions Subgraph Visualization")
     st.pyplot(plt)
     
@@ -129,7 +135,7 @@ elif option == "Visualize Transactions":
 
     # Plot the fraud-only subgraph
     plt.figure(figsize=(8, 8))
-    nx.draw(G_batch_fraud, pos=node_positions_fraud, with_labels=True, node_color='red', node_size=300, font_size=10)
+    nx.draw(G_batch_fraud, pos=node_positions_fraud, with_labels=False, node_color='red', node_size=100, font_size=10)
     plt.title("Fraud Subgraph Visualization")
     st.pyplot(plt)
     
@@ -137,7 +143,7 @@ elif option == "Visualize Transactions":
     edges = []
     for edge in zip(edge_index_batch[0], edge_index_batch[1]):
         if (edge[0] in non_fraud_node_ids and edge[1] in non_fraud_node_ids) or (edge[0] in fraud_node_ids and edge[1] in fraud_node_ids) :
-            non_fraud_edges.append(edge)
+            edges.append(edge)
 
     # Create a graph using NetworkX
     G = nx.Graph()
@@ -153,10 +159,9 @@ elif option == "Visualize Transactions":
     node_positions = nx.circular_layout(G)
     
 
-    st.subheader(f"noooodes {G.number_of_nodes()}")
     # Plot the fraud-only subgraph
     plt.figure(figsize=(8, 8))
-    nx.draw(G, pos=node_positions, with_labels=True, node_color='red', node_size=20, font_size=10)
+    nx.draw(G, pos=node_positions, with_labels=False, node_color='grey', node_size=100, font_size=10)
     plt.title("Graph Visualization")
     st.pyplot(plt)
     
