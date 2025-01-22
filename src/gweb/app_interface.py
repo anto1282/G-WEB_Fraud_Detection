@@ -13,6 +13,8 @@ from model import GCN
 from data import AMLtoGraph
 import os
 import time 
+from evaluate_API import test
+import seaborn as sns 
 #from evaluate import test 
 
 
@@ -23,7 +25,7 @@ api_url = "http://127.0.0.1:8000/predict/"
 st.title("G-WEB Fraud Detection Online")
 
 # Show buttons for fraud detection and transaction visualization
-option = st.selectbox("Choose an option", ["Visualize Transactions", "Start Fraud Detection"])
+option = st.selectbox("Choose an option", ["Start Fraud Detection", "Visualize Transactions"])
 
 # Start Fraud Detection flow
 if option == "Start Fraud Detection":
@@ -33,22 +35,25 @@ if option == "Start Fraud Detection":
 
     # Input: Transaction ID
     # Show the "Start Test" button to begin the input flow
-    model_path = st.text_input("Model Path", "s203557-danmarks-tekniske-universitet-dtu/G-WEB_Fraud_Detection/G-web-fraud-detection-model:latest")
-    batch_size = st.number_input("Batch Size", min_value=1, max_value=1024, value=256)
-    hidden_channels = st.number_input("Hidden Channels", min_value=1, max_value=128, value=16)
-    attention_heads = st.number_input("Attention Heads", min_value=1, max_value=16, value=4)
-    dropout_rate = st.slider("Dropout Rate", min_value=0.0, max_value=1.0, value=0.6)
-    
     start_button = st.button("Start Test", help="Click to start fraud detection test")
 
     if start_button:
         # Once the button is clicked, show the inputs for transaction data
         # Once the button is clicked, show the inputs for transaction data
         with st.spinner('The model is testing on data...'):
-            test(model_path=model_path,batchsize=batch_size,hdn_chnls=hidden_channels,atn_heads=attention_heads,drop_out=dropout_rate)
+            accuracy, cm = test()
 
     # After evaluation, display a success message
-    st.success("Model evaluation completed!")
+        st.success("Model evaluation completed!")
+        st.header(f"Accuracy of model was {accuracy:.3f}")
+        class_names = ["Normal", "Fraud"]
+        plt.figure(figsize=(6, 5))
+        sns.heatmap(cm, annot=True, fmt='g', cmap="Blues", xticklabels=class_names, yticklabels=class_names)
+        plt.xlabel('Predicted Label')
+        plt.ylabel('True Label')
+        plt.title('Confusion Matrix')
+        st.pyplot(plt)
+        
 
 # Visualize Transactions flow
 elif option == "Visualize Transactions":
@@ -81,27 +86,7 @@ elif option == "Visualize Transactions":
     # Extract the edges corresponding to the fraud nodes
     edge_index_batch = batch.edge_index.numpy()
     # showing entire graph
-    edges = []
-    for edge in zip(edge_index_batch[0], edge_index_batch[1]):
-        edges.append(edge)
-
-    # Create a graph using NetworkX
-    G = nx.Graph()
-
-    # Add the edges to the subgraph
-    G.add_edges_from(edges)
-    G.remove_edges_from([edge for edge in G.edges() if edge[0] == edge[1]])
-
-    # Create node positions for visualization (using the feature vectors as positions)
-    # Use NetworkX's circular layout to compute positions
-    node_positions = nx.circular_layout(G)
-
-
-    # Plot the fraud-only subgraph
-    plt.figure(figsize=(8, 8))
-    nx.draw(G, pos=node_positions, with_labels=True, node_color='red', node_size=20, font_size=10)
-    plt.title("Graph Visualization")
-    st.pyplot(plt)
+    
     
     # showing the non fraud graph 
     non_fraud_edges = []
@@ -147,11 +132,36 @@ elif option == "Visualize Transactions":
     nx.draw(G_batch_fraud, pos=node_positions_fraud, with_labels=True, node_color='red', node_size=300, font_size=10)
     plt.title("Fraud Subgraph Visualization")
     st.pyplot(plt)
-    # showing the non fraud graph 
-    non_fraud_edges = []
+    
+    
+    edges = []
     for edge in zip(edge_index_batch[0], edge_index_batch[1]):
-        if edge[0] in non_fraud_node_ids and edge[1] in non_fraud_node_ids:
+        if (edge[0] in non_fraud_node_ids and edge[1] in non_fraud_node_ids) or (edge[0] in fraud_node_ids and edge[1] in fraud_node_ids) :
             non_fraud_edges.append(edge)
+
+    # Create a graph using NetworkX
+    G = nx.Graph()
+    
+
+    # Add the edges to the subgraph
+    
+    G.add_edges_from(edges)
+    G.remove_edges_from([edge for edge in G.edges() if edge[0] == edge[1]])
+
+    # Create node positions for visualization (using the feature vectors as positions)
+    # Use NetworkX's circular layout to compute positions
+    node_positions = nx.circular_layout(G)
+    
+
+    st.subheader(f"noooodes {G.number_of_nodes()}")
+    # Plot the fraud-only subgraph
+    plt.figure(figsize=(8, 8))
+    nx.draw(G, pos=node_positions, with_labels=True, node_color='red', node_size=20, font_size=10)
+    plt.title("Graph Visualization")
+    st.pyplot(plt)
+    
+    
+   
 
     
         # Convert the fraud subgraph to a directed graph
