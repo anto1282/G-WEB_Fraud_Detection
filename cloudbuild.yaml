@@ -1,4 +1,6 @@
 steps:
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://fraud_detection_data/data', './data']
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Build container image'
   env: ['DOCKER_BUILDKIT=1']
