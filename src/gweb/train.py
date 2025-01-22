@@ -163,4 +163,3 @@ if __name__ == "__main__":
     # Just in case you need to debug or run standalone training
     print("Running training script")
     typer.run(train)
-
