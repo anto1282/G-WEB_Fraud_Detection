@@ -1,0 +1,6 @@
+.gitignore
+.git
+!include:.gitignore
+wandb
+data/raw
+data/processed
