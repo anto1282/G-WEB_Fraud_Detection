@@ -3,7 +3,6 @@ import typer
 import pandas as pd
 from sklearn import preprocessing
 from typing import Callable, Optional
-
 from torch_geometric.data import Data, InMemoryDataset
 
 
@@ -21,7 +20,7 @@ class AMLtoGraph(InMemoryDataset):
 
     @property
     def raw_file_names(self) -> str:
-        return "HI-Small_Trans.csv"
+        return "HI-Small_Trans_sample.csv"
 
     @property
     def processed_file_names(self) -> str:
@@ -163,5 +162,5 @@ class AMLtoGraph(InMemoryDataset):
 
 
 if __name__ == "__main__":
-    data_set = AMLtoGraph("/dtu/blackhole/0e/154958/data_small")
-    typer.run(data_set.preprocess)
+    data_set = AMLtoGraph("data/test")
+    typer.run(data_set.process)

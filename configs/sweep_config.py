@@ -8,10 +8,10 @@ sweep_configuration = {
         "lr": {"min": 0.0001, "max": 0.001},
         "batchsize": {"values": [256, 512, 1024]},
         "hdn_chnls": {"values": [16, 32, 64]},
-        "atn_heads": {"values": [4, 8, 16]},
+        "atn_heads": {"values": [2, 4, 8]},
         "drop_out": {"min": 0.4, "max": 0.8},
-        "epochs": {"values": [50, 75, 100]},
-        "pos_weight": {"values": [30, 50, 70, 90]},
+        "epochs": {"values": [75, 100, 125]},
+        "pos_weight": {"values": [50, 70, 100, 150]},
     },
     "command": ["python", "train.py"],
 }

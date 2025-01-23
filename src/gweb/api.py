@@ -93,3 +93,4 @@ async def dataviz():
         response = {"edges": edges, "fraud_edges": fraud_edges.tolist(), "non_fraud_edges": non_fraud_edges.tolist()}
         raise HTTPException(status_code=505, detail=f"Prediction failed: {str(e)} {response}")
     
+

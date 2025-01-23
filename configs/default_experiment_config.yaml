@@ -1,0 +1,7 @@
+lr: { "value": 0.01 }
+batchsize: { "value": 32 }
+hdn_chnls: { "value": 64 }
+atn_heads: { "value": 4 }
+drop_out: { "value": 0.5 }
+epochs: { "value": 3 }
+pos_weight: { "value": 2.0 }
