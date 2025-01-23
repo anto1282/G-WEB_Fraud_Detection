@@ -556,7 +556,7 @@ We performed a number of unit tests, as seen in the tests/ folder.
 >
 > Answer:
 
---- question 28 fill here ---
+We implemented a frontend interface using Streamlit to interact with the API. The interactive UI allows users to select options such as testing the model on the data, visualizing of the data and displaying the system performance.
 
 ### Question 29
 
