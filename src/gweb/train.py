@@ -46,7 +46,7 @@ def train(test_mode=False, config=None) -> None:
             path = "/app/data"
 
         dataset = AMLtoGraph(path)
-    
+
     data = dataset[0]
 
     # Extract hyperparameters from the WandB config
@@ -61,6 +61,7 @@ def train(test_mode=False, config=None) -> None:
     epochs = wandb.config.epochs
     pos_weight = torch.tensor([wandb.config.pos_weight]).to(device)
     patience = 16
+
 
     print(
         f"Running with config: lr={lr}, batchsize={batchsize}, hdn_chnls={hdn_chnls}, atn_heads={atn_heads}, drop_out={drop_out}, epochs={epochs}, pos_weight={pos_weight}"
@@ -118,6 +119,7 @@ def train(test_mode=False, config=None) -> None:
         all_preds = []
         all_labels = []
         if i % 2 == 0:
+
             with torch.no_grad():
                 for val_data in val_loader:
                     val_data.to(device)
@@ -215,9 +217,21 @@ def train(test_mode=False, config=None) -> None:
 
     run.finish()
 
+    # Define output path
+    output_dir = "../../models"
+    os.makedirs(output_dir, exist_ok=True)  # Ensure the directory exists
+    output_path = os.path.join(output_dir, model_name)
 
-def main():
-    train()
+    # Export to ONNX
+    torch.onnx.export(
+        model,
+        args=dummy_input,  # Ensure arguments match the model's forward method
+        f=output_path,  # Directly specify the file path
+        opset_version=18,
+        export_options=torch.onnx.ExportOptions(dynamic_shapes=True),
+    )
+    print(f"Model saved as {model_name}")
+
 
 
 if __name__ == "__main__":
