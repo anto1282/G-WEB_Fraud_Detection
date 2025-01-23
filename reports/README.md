@@ -491,7 +491,7 @@ For monitoring, prometheus was integrated in order to track the number of reques
 >
 > Answer:
 
---- question 24 fill here ---
+For local deployment, we used Uvicorn. After setting up the environment, the FastAPI app was run locally using the command: "uvicorn api:app --reload". The started the application on http://127.0.0.1:8000, where the API could be accessed locally. 
 
 ### Question 25
 
