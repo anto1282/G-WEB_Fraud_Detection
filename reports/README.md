@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/02bf8d17-cec8-4926-9abc-0f942505c382)# Exam template for 02476 Machine Learning Operations
+# Exam template for 02476 Machine Learning Operations
 
 This is the report template for the exam. Please only remove the text formatted as with three dashes in front and behind
 like:
@@ -330,9 +330,9 @@ If the training is run outside of a sweep the data is also stored in the WandB c
 > Answer:
 
 --- question 14 fill here ---
-![image](https://github.com/user-attachments/assets/6f876773-5253-4cbe-bebc-facfcbc03020)
+![my_image](figures/sweep_charts.png)
 In the picture above we have the three metrics logged when the training is performed. The training loss, validation accuracy, and f1 score. We chose to perform a hyperparameter sweep based on the f1 score to make up for the large class imbalance in the dataset. We log the training loss to be able to see whether the models are actually learning anything. The validation accuracy is included to give a better picture of whether the f1 score reflects the model purely predicting the negative class(high accuracy, lower f1 score) or if it trying to learn patterns and predicting the positive class (lower accuracy, higher f1 score).
-![image](https://github.com/user-attachments/assets/b871811b-3a19-45f1-9803-ff3d0bf6721c)
+![my_image](figures/sweep_params.png)
 Above we can see the different hyperparameters' importance to the f1 score. Here we see that for example, the "pos_weight" parameter used for class imbalance regularization had the highest importance and correlated positively with the f1 score. 
 
 ### Question 15
@@ -405,6 +405,8 @@ Above we can see the different hyperparameters' importance to the f1 score. Here
 > Answer:
 
 --- question 19 fill here ---
+![my_image](figures/Data_bucket_gcp.png)
+
 
 ### Question 20
 
@@ -423,6 +425,8 @@ Above we can see the different hyperparameters' importance to the f1 score. Here
 > Answer:
 
 --- question 21 fill here ---
+![my_image](figures/gcp_cloud_build.png)
+
 
 ### Question 22
 
