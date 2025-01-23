@@ -6,7 +6,12 @@ import torch_geometric.transforms as T
 from torch_geometric.loader import NeighborLoader
 from data import AMLtoGraph
 from evaluate_API import test
+from prometheus_client import Counter, Histogram, Summary, make_asgi_app
+import psutil
 
+# Define Prometheus metrics
+error_counter = Counter("prediction_error", "Number of prediction errors")
+request_counter = Counter("prediction_requests", "Number of prediction requests")
 app = FastAPI()
 
 @app.get("/")
@@ -26,6 +31,7 @@ async def healthcheck():
 # Prediction endpoint
 @app.post("/predict/")
 async def predict_money_laundering():
+    request_counter.inc()
     try:
         # Call the test function to get accuracy and confusion matrix
         accuracy, cm = test()
@@ -33,12 +39,14 @@ async def predict_money_laundering():
         # Return accuracy and confusion matrix in the response
         return {"accuracy": accuracy, "confusion_matrix": cm.tolist()} 
     except Exception as e:
+        error_counter.inc()
         raise HTTPException(status_code=502, detail=f"Prediction failed: {str(e)}")
     
 
 # data-visualization endpoint
 @app.post("/dataviz/")
 async def dataviz():
+    request_counter.inc()
     try:
         dataset = AMLtoGraph("/dtu/blackhole/0e/154958/data_small")  
         data = dataset[0]
@@ -48,6 +56,7 @@ async def dataviz():
         for batch in test_loader:
             break  # We only need the first batch for visualization
     except Exception as e:
+        error_counter.inc()
         raise HTTPException(status_code=502, detail=f"batch not found: {str(e)}")
 
     try: 
@@ -61,6 +70,7 @@ async def dataviz():
         non_fraud_node_ids = node_ids[node_labels == 0]
         edge_index_batch = batch.edge_index .numpy()
     except Exception as e:
+        error_counter.inc()
         raise HTTPException(status_code=503, detail=f" failed 2: {str(e)}")
     try:
         # the non fraud graph 
@@ -86,11 +96,53 @@ async def dataviz():
                 edges.append((int(edge[0]),int(edge[1])))
         
     except Exception as e:
+        error_counter.inc()
         raise HTTPException(status_code=504, detail=f" failed at last: {str(e)}")
     try:
         return {"edges": edges, "fraud_edges": fraud_edges, "non_fraud_edges": non_fraud_edges} # cm is likely a numpy array, so convert it to list
     except Exception as e:
+        error_counter.inc()
         response = {"edges": edges, "fraud_edges": fraud_edges.tolist(), "non_fraud_edges": non_fraud_edges.tolist()}
         raise HTTPException(status_code=505, detail=f"Prediction failed: {str(e)} {response}")
     
 
+@app.get("/system-metrics/")
+async def system_metrics():
+    try:
+    # System Resource Metrics
+        cpu_percent = psutil.cpu_percent(interval=1)
+        memory = psutil.virtual_memory()
+        memory_percent = memory.percent
+        memory_used = memory.used / (1024 ** 2)  # MB
+        memory_total = memory.total / (1024 ** 2)  # MB
+
+        disk = psutil.disk_usage('/')
+        disk_percent = disk.percent
+        disk_used = disk.used / (1024 ** 3)  # GB
+        disk_total = disk.total / (1024 ** 3)  # GB
+    except Exception as e:
+            error_counter.inc()
+            raise HTTPException(status_code=501, detail=f" failed at last: {str(e)}")
+    try: 
+        total_requests = request_counter._value.get()  # This should actually be handled through the Prometheus client
+        total_errors = error_counter._value.get()     # Similarly, this should be from the counter value
+    except Exception as e:
+            error_counter.inc()
+            raise HTTPException(status_code=502, detail=f" failed at last: {str(e)}")
+    try: 
+        return {
+            "cpu_percent": cpu_percent,
+            "memory_percent": memory_percent,
+            "memory_used_MB": memory_used,
+            "memory_total_MB": memory_total,
+            "disk_percent": disk_percent,
+            "disk_used_GB": disk_used,
+            "disk_total_GB": disk_total,
+            "total_requests": total_requests,
+            "total_errors": total_errors
+        }
+    except Exception as e:
+            error_counter.inc()
+            raise HTTPException(status_code=505, detail=f" failed at last: {str(e)}")
+# Mount Prometheus metrics endpoint
+app.mount("/metrics", make_asgi_app())
