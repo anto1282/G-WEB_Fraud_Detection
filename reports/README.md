@@ -458,7 +458,24 @@ Above we can see the different hyperparameters' importance to the f1 score. Here
 >
 > Answer:
 
---- question 23 fill here ---
+The API is designed to handle multiple tasks, such as providing health checks, making predictions, visualizing data, and reporting system metrics.
+We wrote an API for our model using FastAPI. we made multiple endpoints. 
+
+Root Endpoint (/): Returns a welcome message.
+
+Health Check (/healthcheck/): Confirms the model is loaded and operational.
+
+Prediction (/predict/): This endpoint triggers the model evaluation by calling a test function, which returns accuracy and confusion matrix results.
+The predict endpoint was made in order to run inference of our model. This endpoint returned model accuracy together with a confusion matrix. This endpoint was then used by the application interface ( written using streamlit). 
+
+Data Visualization (/dataviz/): It processes the graph data, separates fraud and non-fraud nodes, and returns the edges associated with each category for visualization.
+
+System Metrics (/system-metrics/): Provides resource usage details, including CPU, memory, and disk usage, to monitor the API’s performance. 
+
+For monitoring, prometheus was integrated in order to track the number of requests and errors via custom metrics. 
+
+
+
 
 ### Question 24
 
