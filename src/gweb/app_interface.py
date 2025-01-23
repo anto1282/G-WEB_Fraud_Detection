@@ -15,7 +15,6 @@ import os
 import time 
 from evaluate_API import test
 import seaborn as sns 
-#from evaluate import test 
 
 
 # API URL for prediction
@@ -32,11 +31,7 @@ option = st.selectbox("Choose an option", ["Start Fraud Detection", "Visualize T
 # Start Fraud Detection flow
 if option == "Start Fraud Detection":
     st.header("Press button to start testing model on fraud data")
-    # possible layout for training... 
-    # should be changed to testing. 
-
-    # Input: Transaction ID
-    # Show the "Start Test" button to begin the input flow
+    # Show the "Start Test" button to start the test 
     start_button = st.button("Start Test", help="Click to start fraud detection test")
 
     if start_button:
@@ -76,11 +71,8 @@ elif option == "Visualize Transactions":
             edges = results.get("edges", "Not available")
             fraud_edges = results.get("fraud_edges", "Not available")
             non_fraud_edges = results.get("non_fraud_edges", "Not available")
-            #degreesfraud = results.get("degreesfraud", "Not available")
-            #degreesnonfraud = results.get("degreesnonfraud", "Not available")
  
-    # Input: Transaction data (for visualization purposes)
-    st.subheader("Information about Transaction Data")
+    st.subheader("Visualization of Random Batch From The Test Set")
     
     # Entire graph 
     G = nx.Graph()

@@ -1,34 +1,12 @@
-import onnxruntime as ort
-import numpy as np
-import torch
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from typing import List
-from torch_geometric.data import Data
-import os
 from http import HTTPStatus
-from pathlib import Path 
 from evaluate_API import test 
-import streamlit as st
-import requests
-import numpy as np
-import pandas as pd
-import networkx as nx
-import matplotlib.pyplot as plt
 import torch.optim.sgd
 import torch_geometric.transforms as T
 from torch_geometric.loader import NeighborLoader
-import typer
-from sklearn.metrics import f1_score
-from model import GCN
 from data import AMLtoGraph
-import os
-import time 
 from evaluate_API import test
-import seaborn as sns 
-import logging
-# Initialize FastAPI app
-logging.basicConfig(level=logging.DEBUG)
+
 app = FastAPI()
 
 @app.get("/")
@@ -53,7 +31,7 @@ async def predict_money_laundering():
         accuracy, cm = test()
 
         # Return accuracy and confusion matrix in the response
-        return {"accuracy": accuracy, "confusion_matrix": cm.tolist()}  # cm is likely a numpy array, so convert it to list
+        return {"accuracy": accuracy, "confusion_matrix": cm.tolist()} 
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"Prediction failed: {str(e)}")
     
@@ -106,18 +84,10 @@ async def dataviz():
         for edge in zip(edge_index_batch[0], edge_index_batch[1]):
             if (edge[0] in non_fraud_node_ids and edge[1] in non_fraud_node_ids) or (edge[0] in fraud_node_ids and edge[1] in fraud_node_ids) :
                 edges.append((int(edge[0]),int(edge[1])))
-
-        # Create a graph using NetworkX
         
     except Exception as e:
         raise HTTPException(status_code=504, detail=f" failed at last: {str(e)}")
     try:
-        # Degrees
-        
-        #logging.debug({"edges": edges.tolist(), "fraud_edges": fraud_edges.tolist(), "non_fraud_edges": non_fraud_edges.tolist(), "degreesfraud": degreesfraud.tolist(), "degreesnonfraud": degreesnonfraud.tolist()})
-
-        # Return accuracy and confusion matrix in the response
-        #return {"degreesfraud": degreesfraud.tolist(), "degreesnonfraud": degreesnonfraud.tolist() }  # cm is likely a numpy array, so convert it}
         return {"edges": edges, "fraud_edges": fraud_edges, "non_fraud_edges": non_fraud_edges} # cm is likely a numpy array, so convert it to list
     except Exception as e:
         response = {"edges": edges, "fraud_edges": fraud_edges.tolist(), "non_fraud_edges": non_fraud_edges.tolist()}
