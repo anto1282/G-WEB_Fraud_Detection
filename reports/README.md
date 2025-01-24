@@ -216,7 +216,7 @@ We used Ruff for linting and formatting. This was also added in a pre-commit hoo
 >
 > Answer:
 
---- question 7 fill here ---
+We have implemented a total of 10 tests across two test files. The test_data.py file contains 9 tests that test the pipeline for data processing, and includes tests for the loading of data, the feature matrix, edge indices, label shapes, and graph connectivity. Finally, this file tests the functionality of node splits as well as edge attributes. The test_model.py file contains a test that verifies the GCN model architecture and ensures it functions as intended, by checking that there is a correct input-output compatibility during the forward pass. 
 
 ### Question 8
 
@@ -231,7 +231,8 @@ We used Ruff for linting and formatting. This was also added in a pre-commit hoo
 >
 > Answer:
 
---- question 8 fill here ---
+The total code coverage of the aforementioned tests of our code is 56%, which includes all of our source code. This is very far from 100%, and can definitely be optimized. The beauty of unit tests is that there are never enough, and it is therefore wholly possible (and probably necessary) to write many more tests for our code, particularly for the train.py file, as this is detrimental to the models functionality. 
+However, even if we did reach a code coverage of 100%, this would not ensure that our code works perfectly. Code coverage is only a tool for measuring how much of the code is executed during testing, and does not have anything to do with whether the code works as intended under any and all circumstances. There is still the possibility for logic errors, integration issues or unexpected edge cases, even if the coverage is very high. 
 
 ### Question 9
 
