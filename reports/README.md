@@ -516,7 +516,10 @@ For monitoring, prometheus was integrated in order to track the number of reques
 >
 > Answer:
 
-For local deployment, we used Uvicorn. After setting up the environment, the FastAPI app was run locally using the command: "uvicorn api:app --reload". The started the application on http://127.0.0.1:8000, where the API could be accessed locally. 
+For local deployment, we used Uvicorn to serve the FastAPI app. After setting up the environment, we ran the application locally using the command: uvicorn api:app --reload. This started the application at http://127.0.0.1:8000, where the API could be accessed and tested locally.
+
+For cloud deployment, we would follow a similar process, ensuring that the environment is properly configured for the cloud provider. Once everything is set up, we would deploy the application using containerized services like Google Cloud Run. To invoke the deployed service, a user would call the API using a command such as curl -X POST -F "file=@file.json" <weburl>, replacing <weburl> with the actual cloud URL where the service is hosted.
+127.0.0.1
 
 
 ### Question 25
