@@ -456,6 +456,7 @@ We used the following services: IAM & Admin, Cloud Storage, Cloud Build, and Art
 > Answer:
 
 --- question 22 fill here ---
+We managed to implement Vertex AI very simply. By using the docker image which is located in the artifact registry we can easily run a Vertex AI. The image contains the data, which is not optimal compared to accessing the data during creation of the container, but it made it very easy to create training jobs in Vertex AI. There are some complications with the permissions of the gcloud project, where even though a user has ownership of the project they are not allowed to run a Vertex Ai job.  
 
 ## Deployment
 
