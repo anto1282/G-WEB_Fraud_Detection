@@ -246,8 +246,7 @@ However, even if we did reach a code coverage of 100%, this would not ensure tha
 > *addition to the main branch. To merge code we ...*
 >
 > Answer:
-
-We did not utilize branches and pull requests for this project. Instead, we worked independently and together on pre-defined parts of the project. However, we recognize that branches are extremely useful, particularly for bigger groups than ours, as they allow developers to work in parallel on the same code, without impacting the main codebase. The implementation of the work done in these branches is aided by pull requests, which allow for thorough review and approval of changes, before they are merged into the main branch. 
+We used some branches, but it was not employed by all members of the group. We recognize that branches are extremely useful particularly for bigger groups than ours as they allow developers to work in parallel on the same code without impacting the main codebase. This parallel workflow helps reduce conflicts and streamline collaboration. The implementation of the work done in these branches is aided by pull requests, which allow for thorough review, collaboration, discussion of potential issues, and approval of changes before they are merged into the main branch, ensuring code quality, consistency, and better teamwork. As time was limited for our project we chose to prioritize creating more and reviewing less, although for larger projects this should be implemented carefully.
 
 ### Question 10
 
