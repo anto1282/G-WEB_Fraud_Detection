@@ -576,7 +576,8 @@ Implementing these metrics allows us to monitor the API's performance and health
 > Answer:
 
 --- question 27 fill here ---
-We used in total 13 credits. The most expensive thing for our project was storage of our docker images. Working in the cloud was efficient because you are not dependent on allocating your local ressources for different operations. This allowed us to continue working efficiently even when performing computationally heavy work, as this was happening in the cloud instead of our personal computers.  
+We used in total 13 credits. The most expensive thing for our project was storage of our docker images. Working in the cloud was efficient because you are not dependent on allocating your local ressources for different operations. This allowed us to continue working efficiently even when performing computationally heavy work, as this was happening in the cloud instead of our personal computers.
+Working in the cloud adds another layer of complexity to development. It does take a little time to setup and managing the permissions and users can also become cumbersome. When that is all said and done it does have many very useful tools and allows us to work with models and data that is not nearly feasible to work with on a personal laptop
 
 ### Question 28
 
@@ -617,7 +618,6 @@ Once the experiments are completed, the changes made to the codebase are pushed 
 Once the code is validated, a Docker image is built from the Dockerfile, ensuring that the environment is consistent across all stages of the pipeline. This image is then uploaded to an artifact registry and is ready for training in a controlled and reproducible environment.
 
 At this point, the user can either clone the source code and pull the latest Docker image to train the model themselves or use one of the pretrained models that have been saved and made available.
-
 To interact with the model, the user can use the FastAPI backend and the Streamlit frontend. The FastAPI service handles model inference requests, while the Streamlit interface  visualizes the results. Through this setup, users can run inference on their data, obtain model predictions, and visualize accuracy and performance metrics. The model also provides visualizations of the test data, helping users interpret the results.
 
 ### Question 30
