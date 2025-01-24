@@ -603,6 +603,7 @@ We implemented a frontend interface using Streamlit to interact with the API. Th
 > Answer:
 
 --- question 30 fill here ---
+One of the greater challenges in the project arose because we decided to keep our remote storage private, which meant we had to manage permissions of all users. This was especially challenging when implementing automation workflows that required a service account to access our remotely stored data. Authentification with gcloud is rather unproblematic, but when paired with dvc, it was very hard to find something that worked. However, we were successful in figuring out a way of using a secret with the service account credentials that could be used to authenticate via dvc.
 
 ### Question 31
 
