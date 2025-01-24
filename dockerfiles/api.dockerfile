@@ -25,6 +25,8 @@ RUN pip install --upgrade pip && \
 
 COPY data data/
 COPY models/model.pth models/
+COPY dev_requirements.txt dev_requirements.txt
+RUN pip install -r dev_requirements.txt
 
 # Expose ports for Streamlit and Uvicorn
 EXPOSE 8501 8000
