@@ -522,8 +522,7 @@ For local deployment, we used Uvicorn. After setting up the environment, the Fas
 In order to perform unit testing of our api, we would create a test client = TestClient(app). 
 Then we would test each of the endpoints and assert that the status code and response is what we would expect. 
 
-Then the load testing would be performed using the locust framwork. 
-We would create a file that contains code that simulates user interactions. Then this could will be run using the command " locust -f tests/performancetests/nameoffile.py ".
+For load testing, we would use the Locust framework. we would write a script simulating user interactions with the API by defining tasks like sending GET and POST requests to specific endpoints. This script would be executed using the command locust -f tests/performancetests/nameoffile.py. The results would give insight into the API’s performance under varying load levels and help identify any bottlenecks or issues.
 
 ### Question 26
 
@@ -538,7 +537,13 @@ We would create a file that contains code that simulates user interactions. Then
 >
 > Answer:
 
---- question 26 fill here ---
+We did manage to implement some basic monitoring for our deployed model. Specifically, we track the number of prediction requests using the request_counter metric, which increments every time a request is made to the /predict/ or /dataviz/ endpoints. This helps us understand the volume of traffic the API is handling.
+
+We also track prediction errors using the error_counter metric. By monitoring these counters, we can get an overview of how well the model is performing and detect any spikes in errors.
+
+In addition to tracking requests and errors, we also monitor system resources such as CPU usage, memory usage, and disk space, which helps us ensure the application is running smoothly without resource bottlenecks.
+
+Implementing these metrics allows us to monitor the API's performance and health, and provides insights into how we could optimize the system.
 
 ## Overall discussion of project
 
