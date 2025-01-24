@@ -60,12 +60,12 @@ will check the repositories and the code to verify your answers.
 * [ ] Do a bit of code typing and remember to document essential parts of your code (M7)
 * [x] Setup version control for your data or part of your data (M8)
 * [x] Add command line interfaces and project commands to your code where it makes sense (M9)
-* [ ] Construct one or multiple docker files for your code (M10)
-* [ ] Build the docker files locally and make sure they work as intended (M10)
-* [ ] Write one or multiple configurations files for your experiments (M11)
+* [x] Construct one or multiple docker files for your code (M10)
+* [x] Build the docker files locally and make sure they work as intended (M10)
+* [x] Write one or multiple configurations files for your experiments (M11)
 * [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
 * [ ] Use profiling to optimize your code (M12)
-* [ ] Use logging to log important events in your code (M14)
+* [x] Use logging to log important events in your code (M14)
 * [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
 * [x] Consider running a hyperparameter optimization sweep (M14)
 * [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
@@ -84,7 +84,7 @@ will check the repositories and the code to verify your answers.
 * [x] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
-* [ ] Create a FastAPI application that can do inference using your model (M22)
+* [x] Create a FastAPI application that can do inference using your model (M22)
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
 * [ ] Write API tests for your application and setup continues integration for these (M24)
 * [ ] Load test your application (M24)
@@ -164,6 +164,7 @@ We chose to use the PyTorch-geometric framework to support the project. We use t
 > Answer:
 
 --- question 4 fill here ---
+We managed dependencies with Pip, Conda and the requirements file. To get started with the project a new member would have to first clone the repository and then create a Conda environment with Python version 3.11. After this it is recommended to install the "invoke" package with pip which makes installing the dependencies easier. During the project we encountered a problem with Torch Geometric where it is able to install, but is missing a package. This package can not be installed regularly. A fix for this is to download torch packages in a very specific order which is performed via the invoke command. It is not possible to download the required packages merely via the requirements.txt file.
 
 ### Question 5
 
@@ -180,6 +181,7 @@ We chose to use the PyTorch-geometric framework to support the project. We use t
 > Answer:
 
 --- question 5 fill here ---
+We mostly stuck to the cookie cutter template. The source directory contains all the python files required for training and evaluating the model, in the models folder we store any models of importance. We initially used a notebook in the "Notebooks" folder to first test the model and debug, but it was quickly made obsolote and we did not really use notbooks for anything. As we ran some training on the DTU high performance cluster, we added a folder called sh_scripts which contains a shell script which submits wandb agents for training as bsub jobs.  
 
 ### Question 6
 
@@ -195,6 +197,7 @@ We chose to use the PyTorch-geometric framework to support the project. We use t
 > Answer:
 
 --- question 6 fill here ---
+We used Ruff for linting and formatting. This was also added in a pre-commit hook to automate the formatting. In larger projects where multiple people collaborate, it is important to standardize as much as possible to ensure that everyone is able to understand the code and to make it more readable. The functionality of code that was written will eventually be forgotten and if no documentation is provided you need to "Re-understand" the code every time someone has to change or use it. Documentation also ensures that future collaborators are able to be onboarded quicker when they are able to understand the project.
 
 ## Version control
 
@@ -259,6 +262,7 @@ We did not utilize branches and pull requests for this project. Instead, we work
 > Answer:
 
 --- question 10 fill here ---
+We implemented DVC on our data, although it was not fully utilized in this project. We did not change the data after implementing DVC, so there was no real version control. We created a subset of the data, but we still have both versions of the data present. We used it mostly to share the processed data amongst the team members through version control so the preprocessing only needed to be performed once. As we implemented DVC in a google cloud bucket it also enabled us to utilize the data in the cloud. Data version control is beneficial if the data changes while the project is proceeding. It can allow for one team member to keep collecting data or changing the data, while another may work on the model without breaking the script model or having to change the script. 
 
 ### Question 11
 
