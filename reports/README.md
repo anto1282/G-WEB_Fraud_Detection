@@ -622,3 +622,8 @@ One of the greater challenges in the project arose because we decided to keep ou
 > Answer:
 
 --- question 31 fill here ---
+Student s203572 was responsible for: 
+- Configuring the data version control setup via Google Cloud Storage.
+- Developing, building, running, and testing docker images for training our model and integrating these with Weights and Biases.
+- Creating the setup for building and storing our images in the cloud via Cloud Build and Artifact Registry.
+- Creating and managing continuous integrations workflows, including automatic unittesting and conditional building of docker images in the cloud based on the results of the tests. 
