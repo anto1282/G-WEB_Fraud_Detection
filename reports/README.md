@@ -409,7 +409,7 @@ We used the following services: IAM & Admin, Cloud Storage, Cloud Build, and Art
 > Answer:
 
 --- question 18 fill here ---
-
+We did not explicity use the compute engine to create virtual machine instances. We implemented the training as a docker image in our registry which allowed us to use vertex ai if we wanted to. We could also easily have used the compute engine by cloning the git repository and training the models, just like you would on a local machine. For training we used DTU's HPC as we could not get GPU ressources on the google cloud project and thought that we would run out of credits if we used the compute engine or Vertex AI for the hyperparameter sweep. 
 ### Question 19
 
 > **Insert 1-2 images of your GCP bucket, such that we can see what data you have stored in it.**
