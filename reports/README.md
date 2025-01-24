@@ -660,3 +660,10 @@ Student s193602 was reponsible for
 - Adding caching to github
 - Adding multi-python testing
 - Debugging and testing code updates
+
+Student s203788 was reponsible for
+- Command line interfaces and project commands 
+- FastAPI application that can do inference 
+- Creating a frontend for the API
+- Instrument API with a couple of system metrics 
+
