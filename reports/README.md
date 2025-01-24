@@ -143,7 +143,7 @@ Group 97
 >
 > Answer:
 --- question 3 fill here ---
-We chose to use the PyTorch-geometric framework to support the project. We use the framework to create the data set and to be able to sample batches of the graph. Furthermore we use the built-in Graph Attention Network to create neural networks based on graph structures. 
+We chose to use the PyTorch Geometric framework for our project. This package helped us create the dataset and sample batches from the graph. The torch geometrics neighborloader made it possible to train and test in batches, which else could have become a problem, as the graph would be too sparse in batches. It also provided us with the Graph Attention Network (GAT), which we used to build neural networks that work with graph data. This was really useful for our project, as we needed to process graph-structured data for fraud detection. The framework made it easier to implement these tasks, especially when working with large graphs and performing graph-based learning. 
 
 ## Coding environment
 
