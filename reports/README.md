@@ -458,8 +458,7 @@ Above we can see the different hyperparameters' importance to the f1 score. Here
 >
 > Answer:
 
-The API is designed to handle multiple tasks, such as providing health checks, making predictions, visualizing data, and reporting system metrics.
-We wrote an API for our model using FastAPI. we made multiple endpoints. 
+We wrote an API for our model using FastAPI. we made multiple endpoints: 
 
 Root Endpoint (/): Returns a welcome message.
 
@@ -472,7 +471,7 @@ Data Visualization (/dataviz/): It processes the graph data, separates fraud and
 
 System Metrics (/system-metrics/): Provides resource usage details, including CPU, memory, and disk usage, to monitor the API’s performance. 
 
-For monitoring, prometheus was integrated in order to track the number of requests and errors via custom metrics. 
+For monitoring, prometheus was integrated in order to track the number of requests and errors.
 
 
 
@@ -493,6 +492,7 @@ For monitoring, prometheus was integrated in order to track the number of reques
 
 For local deployment, we used Uvicorn. After setting up the environment, the FastAPI app was run locally using the command: "uvicorn api:app --reload". The started the application on http://127.0.0.1:8000, where the API could be accessed locally. 
 
+
 ### Question 25
 
 > **Did you perform any unit testing and load testing of your API? If yes, explain how you did it and what results for**
@@ -507,6 +507,8 @@ For local deployment, we used Uvicorn. After setting up the environment, the Fas
 > Answer:
 
 We performed a number of unit tests, as seen in the tests/ folder. 
+
+In order to perform load testing of the api, we would use locust framework. 
 
 ### Question 26
 
