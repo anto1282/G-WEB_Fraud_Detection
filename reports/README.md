@@ -597,7 +597,7 @@ We implemented a frontend interface using Streamlit to interact with the API. Th
 > *Whenever we commit code and push to GitHub, it auto triggers ... and ... . From there the diagram shows ...*
 >
 > Answer:
-
+[this figure](figures/MLOPSpipeline.png)
 --- question 29 fill here ---
 
 ### Question 30
