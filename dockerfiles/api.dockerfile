@@ -35,3 +35,5 @@ WORKDIR /app/src/gweb
 
 # Start both Streamlit and Uvicorn using a process manager
 ENTRYPOINT ["sh", "-c", "uvicorn api:app --host 0.0.0.0 --port 8000 & streamlit run app_interface.py"]
+
+
