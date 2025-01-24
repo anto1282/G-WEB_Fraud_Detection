@@ -357,9 +357,10 @@ The sweep was performed on a small dataset, so as not to use too many ressources
 > Answer:
 
 --- question 15 fill here ---
-We developed an dockerfile for training our model and added this step to out continuous integration setup by automatically building an image if all unittests pass. This image is then added to our artifact registry. To run this image you would have to pull it and then run it (you would have to pass a wandb api key as argument):
-1. `docker pull europe-west10-docker.pkg.dev/dtumlops-448010/gweb-container-registry/train:latest`
-2. `docker run -e <WAND_API_KEY> train:latest`
+For our project, we created a Dockerfile to build an image for training our model. This Docker image was integrated into our continuous integration setup, where it is automatically built whenever all unit tests pass. Once built, the image is pushed to our artifact registry. To run the image, you can pull it from the registry and then execute it, passing in your WandB API key as an argument. The commands to run the Docker container are:
+1. docker pull europe-west10-docker.pkg.dev/dtumlops-448010/gweb-container-registry/train:latest
+2. docker run -e <WAND_API_KEY> train:latest
+Here’s the link to the Dockerfile used for training:
 
 https://github.com/anto1282/G-WEB_Fraud_Detection/blob/main/dockerfiles/train.dockerfile
 
