@@ -377,6 +377,7 @@ https://github.com/anto1282/G-WEB_Fraud_Detection/blob/main/dockerfiles/train.do
 > Answer:
 
 --- question 16 fill here ---
+When we ran into a bug we used typer to write out a more informational stacktrace with variable names and values. We ran into some trouble with the API and needed to troubleshoot that. This was done with try except statements where we returned a HTTP error so we were able to locate where the bug was. We also utilized the good old print method to check some of the variable types when debugging. We did not end up profiling our code as we believe it to be absolutely perfekt and without any need for optimization or change (just joking of course)
 
 ## Working in the cloud
 
