@@ -317,8 +317,7 @@ We used config files in yaml format to parse arguments to the training. We have 
 > Answer:
 
 --- question 13 fill here ---
-We performed a hyperparameter sweep using WandB. The metadata and configurations for these runs are saved in the project and linked to each run. We also chose to save the models that were trained as artifacts in WandB. The metadata are attached to the models, so it is possible to reproduce results. 
-If the training is run outside of a sweep the data is also stored in the WandB cloud as a single run. The files are also stored in a local directory. 
+To ensure reproducibility of experiments, we used WandB for hyperparameter sweeps. WandB saved the metadata and configurations for each run, allowing us to track and link them to specific experiments. We also saved the trained models as artifacts in WandB, with all relevant metadata attached, making it possible to reproduce results. If training is done outside of a sweep, the experiment data is stored as a single run in the WandB cloud, and the associated files are also saved locally. This setup ensures that we can easily retrieve and reproduce any experiment, keeping track of every detail, including hyperparameters, configurations, and model versions.
 
 ### Question 14
 
@@ -337,9 +336,12 @@ If the training is run outside of a sweep the data is also stored in the WandB c
 
 --- question 14 fill here ---
 ![my_image](figures/sweep_charts.png)
-In the picture above we have the three metrics logged when the training is performed. The training loss, validation accuracy, and f1 score. We chose to perform a hyperparameter sweep based on the f1 score to make up for the large class imbalance in the dataset. We log the training loss to be able to see whether the models are actually learning anything. The validation accuracy is included to give a better picture of whether the f1 score reflects the model purely predicting the negative class(high accuracy, lower f1 score) or if it trying to learn patterns and predicting the positive class (lower accuracy, higher f1 score).
+In the picture above, we observe three metrics logged during the training process: training loss, validation accuracy, and F1 score. Each metric serves a distinct purpose in evaluating the model's performance and guiding our decisions. We chose to perform a hyperparameter sweep based on the F1 score to address the significant class imbalance in the dataset effectively. The F1 score provides a balance between precision and recall, making it particularly suitable for imbalanced classification tasks.
+Logging the training loss allows us to track whether the models are genuinely learning and improving over time or merely overfitting to the training data. Additionally, we include validation accuracy as a complementary metric. It provides insight into whether the F1 score improvements come from the model purely predicting the majority (negative) class, which would result in high accuracy but a lower F1 score, or from the model identifying patterns in the data and correctly predicting the minority (positive) class, which might lower accuracy but increase the F1 score.
+
 ![my_image](figures/sweep_params.png)
-Above we can see the different hyperparameters' importance to the f1 score. Here we see that for example, the "pos_weight" parameter used for class imbalance regularization had the highest importance and correlated positively with the f1 score. 
+In the second image, we analyze the importance of different hyperparameters on the F1 score. For instance, we see that the "pos_weight" parameter, used for regularization to counteract class imbalance, has the highest impact and correlates positively with the F1 score. This highlights its crucial role in improving the model's performance on the minority class.
+The sweep was performed on a small dataset, so as not to use too many ressources. This will allow us to find most optimal hyperparameters which can be used for training the final model on the larger dataset. 
 
 ### Question 15
 
