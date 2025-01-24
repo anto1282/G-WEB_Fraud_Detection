@@ -644,3 +644,9 @@ Student s203557 was responsible for:
 - Setting up project git, cookiecutting, implementing pre-commit ruff hook
 - Set up wandb for logging and hyperparameter sweep
 - Assisted in creation of local API and frontend
+
+Student 193602 was reponsible for
+- Continuous integration, unit tests related to data and model
+- Adding caching to github
+- Adding multi-python testing
+- Debugging and testing code updates
