@@ -428,6 +428,7 @@ We used the following services: IAM & Admin, Cloud Storage, Cloud Build, and Art
 > Answer:
 
 --- question 20 fill here ---
+![my_image](figures/image.png)
 
 ### Question 21
 
