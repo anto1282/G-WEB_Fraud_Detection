@@ -518,9 +518,11 @@ For local deployment, we used Uvicorn. After setting up the environment, the Fas
 >
 > Answer:
 
-We performed a number of unit tests, as seen in the tests/ folder. 
+In order to perform unit testing of our api, we would create a test client = TestClient(app). 
+Then we would test each of the endpoints and assert that the status code and response is what we would expect. 
 
-In order to perform load testing of the api, we would use locust framework. 
+Then the load testing would be performed using the locust framwork. 
+We would create a file that contains code that simulates user interactions. Then this could will be run using the command " locust -f tests/performancetests/nameoffile.py ".
 
 ### Question 26
 
