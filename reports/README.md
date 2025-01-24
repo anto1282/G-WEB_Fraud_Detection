@@ -359,6 +359,8 @@ We developed an dockerfile for training our model and added this step to out con
 1. `docker pull europe-west10-docker.pkg.dev/dtumlops-448010/gweb-container-registry/train:latest`
 2. `docker run -e <WAND_API_KEY> train:latest`
 
+https://github.com/anto1282/G-WEB_Fraud_Detection/blob/main/dockerfiles/train.dockerfile
+
 
 ### Question 16
 
