@@ -9,6 +9,10 @@ WORKDIR /app
 
 
 COPY requirements.txt requirements.txt
+COPY src src/
+COPY README.md README.md
+COPY pyproject.toml pyproject.toml
+
 RUN pip install --upgrade pip && \
     pip install torch torchvision torchaudio && \
     pip install torch-cluster torch-scatter torch-geometric torch-spline-conv torch-sparse && \
@@ -18,9 +22,7 @@ RUN pip install --upgrade pip && \
 
 
 # Copy source code and other necessary files
-COPY src src/
-COPY README.md README.md
-COPY pyproject.toml pyproject.toml
+
 COPY data data/
 COPY models/model.pth models/
 
