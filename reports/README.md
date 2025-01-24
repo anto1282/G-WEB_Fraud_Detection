@@ -632,4 +632,9 @@ Student s203572 was responsible for:
 - Configuring the data version control setup via Google Cloud Storage.
 - Developing, building, running, and testing docker images for training our model and integrating these with Weights and Biases.
 - Creating the setup for building and storing our images in the cloud via Cloud Build and Artifact Registry.
-- Creating and managing continuous integrations workflows, including automatic unittesting and conditional building of docker images in the cloud based on the results of the tests. 
+- Creating and managing continuous integrations workflows, including automatic unittesting and conditional building of docker images in the cloud based on the results of the tests.
+
+Student s203557 was responsible for:
+- Setting up project git, cookiecutting, implementing pre-commit ruff hook
+- Set up wandb for logging and hyperparameter sweep
+- Assisted in creation of local API and frontend
