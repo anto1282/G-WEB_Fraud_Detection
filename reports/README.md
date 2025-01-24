@@ -76,13 +76,13 @@ will check the repositories and the code to verify your answers.
 * [x] Write unit tests related to model construction and or model training (M16)
 * [x] Calculate the code coverage (M16)
 * [x] Get some continuous integration running on the GitHub repository (M17)
-* [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
+* [x] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
 * [x] Add a linting step to your continuous integration (M17)
-* [ ] Add pre-commit hooks to your version control setup (M18)
+* [x] Add pre-commit hooks to your version control setup (M18)
 * [ ] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [x] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
-* [ ] Create a trigger workflow for automatically building your docker images (M21)
+* [x] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [x] Create a FastAPI application that can do inference using your model (M22)
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
@@ -280,6 +280,8 @@ We implemented DVC on our data, although it was not fully utilized in this proje
 > Answer:
 
 --- question 11 fill here ---
+We use an automatic unittesting workflow that is triggered on push on main. The workflow caches the project dependencies to optimize performance, and thus significantly reduces the time it takes to perform the tests. The tests cover 3 different versions of python.
+https://github.com/anto1282/G-WEB_Fraud_Detection/blob/main/.github/workflows/test-and-build.yaml  
 
 ## Running code and tracking experiments
 
@@ -353,6 +355,10 @@ Above we can see the different hyperparameters' importance to the f1 score. Here
 > Answer:
 
 --- question 15 fill here ---
+We developed an dockerfile for training our model and added this step to out continuous integration setup by automatically building an image if all unittests pass. This image is then added to our artifact registry. To run this image you would have to pull it and then run it (you would have to pass a wandb api key as argument):
+1. `docker pull europe-west10-docker.pkg.dev/dtumlops-448010/gweb-container-registry/train:latest`
+2. `docker run -e <WAND_API_KEY> train:latest`
+
 
 ### Question 16
 
@@ -384,7 +390,7 @@ Above we can see the different hyperparameters' importance to the f1 score. Here
 >
 > Answer:
 
---- question 17 fill here ---
+We used the following services: IAM & Admin, Cloud Storage, Cloud Build, and Artifact Registry. IAM & Admin is used for managing permissions of the project members and for a service account for GitHub Actions automation workflows. Cloud Storage is used to store our data in buckets to ensure accessibility and data version control. Cloud Build is used in our automatic setup for building docker images in the cloud, and pushing them to our Artifact Registry, which then stores them.
 
 ### Question 18
 
@@ -547,6 +553,7 @@ In order to perform load testing of the api, we would use locust framework.
 > Answer:
 
 --- question 27 fill here ---
+We used in total 13 credits. The most expensive thing for our project was storage of our docker images. Working in the cloud was efficient because you are not dependent on allocating your local ressources for different operations. This allowed us to continue working efficiently even when performing computationally heavy work, as this was happening in the cloud instead of our personal computers.  
 
 ### Question 28
 
