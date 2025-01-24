@@ -231,7 +231,7 @@ We have implemented a total of 10 tests across two test files. The test_data.py 
 >
 > Answer:
 
-The total code coverage of the aforementioned tests of our code is 56%, which includes all of our source code. This is very far from 100%, and can definitely be optimized. The beauty of unit tests is that there are never enough, and it is therefore wholly possible (and probably necessary) to write many more tests for our code, particularly for the train.py file, as this is detrimental to the models functionality. 
+The total code coverage of the aforementioned tests of our code is 68%. This is very far from 100%, and can definitely be optimized. The beauty of unit tests is that there are never enough, and it is therefore wholly possible (and probably necessary) to write many more tests for our code, particularly for the train.py file, as this is detrimental to the models functionality. 
 However, even if we did reach a code coverage of 100%, this would not ensure that our code works perfectly. Code coverage is only a tool for measuring how much of the code is executed during testing, and does not have anything to do with whether the code works as intended under any and all circumstances. There is still the possibility for logic errors, integration issues or unexpected edge cases, even if the coverage is very high. 
 
 ### Question 9
