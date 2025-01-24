@@ -280,8 +280,14 @@ We implemented DVC on our data, although it was not fully utilized in this proje
 > Answer:
 
 --- question 11 fill here ---
-We use an automatic unittesting workflow that is triggered on push on main. The workflow caches the project dependencies to optimize performance, and thus significantly reduces the time it takes to perform the tests. The tests cover 3 different versions of python.
+We have organized our continuous integration into an automated testing workflow that is triggered on every push to main. The workflow is focused on the robustness and correct utilization of our code. The unit tests can be found in the files test_data.py and test_model.py located in the tests folder. 
+The workflow caches the project dependencies to optimize performance, and thus significantly reduces the time it takes to perform the tests. This caching mechanism significantly speeds up the workflow execution, and is thereby useful for optimizing the runtime. The tests cover 3 different versions of python (namely, 3.10, 3.11 and 3.12). Finally, it runs on a Linux-based runner (ubuntu-latest), which is a reliable and widely used setup for Python applications, and thus suited for our purposes. 
+An example of a triggered workflow can be seen here:
 https://github.com/anto1282/G-WEB_Fraud_Detection/blob/main/.github/workflows/test-and-build.yaml  
+This integration ensures that any new changes pushed to the main branch are thoroughly tested, improving the stability and reliability of our application. 
+In the future, we plan to extend our continuous integration to include more tests for various aspects of the code, to achieve a 100% coverage, and to test on different operating systems (namely macos and windows).
+test_data.py
+
 
 ## Running code and tracking experiments
 
@@ -459,7 +465,9 @@ We did not explicity use the compute engine to create virtual machine instances.
 > Answer:
 
 --- question 22 fill here ---
-We managed to implement Vertex AI very simply. By using the docker image which is located in the artifact registry we can easily run a Vertex AI. The image contains the data, which is not optimal compared to accessing the data during creation of the container, but it made it very easy to create training jobs in Vertex AI. There are some complications with the permissions of the gcloud project, where even though a user has ownership of the project they are not allowed to run a Vertex Ai job.  
+We managed to implement Vertex AI very simply. By utilizing the Docker image stored in the artifact registry, we were able to seamlessly execute Vertex AI jobs. The Docker image contains the necessary data, which, while not the most optimal setup compared to dynamically accessing the data during the container's creation, significantly simplified the process of creating and running training jobs in Vertex AI. This approach allowed us to streamline deployment and focus on the model training workflows.
+
+However, there were some complications related to the permissions within the Google Cloud project. Specifically, even users who had ownership of the project encountered restrictions that prevented them from running Vertex AI jobs. This highlights the need for a more granular review and configuration of IAM (Identity and Access Management) roles and permissions to ensure all necessary access is granted for smooth execution of Vertex AI tasks. Despite these challenges, the implementation process overall was efficient and functional.
 
 ## Deployment
 
